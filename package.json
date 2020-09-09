@@ -32,6 +32,7 @@
     "node-fetch": "^2.6.0",
     "quick.db": "^7.1.1",
     "quickmongo": "^1.0.9",
-    "recursive-readdir": "^2.2.2"
+    "recursive-readdir": "^2.2.2",
+    "winston": "^3.3.3"
   }
 }

@@ -44,11 +44,11 @@ module.exports = class MyClient extends AkairoClient{
     }
 
     start() {
-        this.commandHandler.loadAll();
         this.commandHandler.useListenerHandler(this.listenerHandler);
         this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
         this.listenerHandler.loadAll();
         this.inhibitorHandler.loadAll();
+        this.commandHandler.loadAll();
         this.login()
     }
 }
