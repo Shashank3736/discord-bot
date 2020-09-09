@@ -8,7 +8,10 @@ class ReadyEvent extends Listener{
         });
     }
     exec() {
-        
+        this.client.Logger.info({
+            label: "LOGGED IN", 
+            message: `${this.client.user.tag} is now online.`
+        });
     }
 }
 module.exports = ReadyEvent;

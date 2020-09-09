@@ -4,7 +4,8 @@
   "description": "A highly customizable captcha bot for your discord server to protect your server from unwanted nuke and self botting.",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "logger": "node src/base/logger"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,6 @@
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0",
     "quick.db": "^7.1.1",
-    "quickmongo": "^1.0.9",
     "recursive-readdir": "^2.2.2",
     "winston": "^3.3.3"
   }

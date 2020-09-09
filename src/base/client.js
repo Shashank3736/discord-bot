@@ -39,16 +39,36 @@ module.exports = class MyClient extends AkairoClient{
         this.listenerHandler.setEmitters({
             commandHandler: this.commandHandler,
             inhibitorHandler: this.inhibitorHandler,
-            listenerHandler: this.listenerHandler
+            listenerHandler: this.listenerHandler,
+            process: process
         });
+
+        this.Logger = require('./logger');
     }
 
     start() {
+        //using listener handler in command handler
+        this.Logger.debug({label: "Client", message: "Using listener handlers for command handler"});
         this.commandHandler.useListenerHandler(this.listenerHandler);
+
+        //using inhibitor handlers in command handler
+        this.Logger.debug({label: "Client", message: "Using inhibitor handlers for command handler"});
         this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
+
+        //Loading listener handlers.
+        this.Logger.info({label: "Loading", message: "Listener Handlers"});
         this.listenerHandler.loadAll();
+
+        //Loading inhibitors
+        this.Logger.info({label: "Loading", message: "Inhibitor Handlers"});
         this.inhibitorHandler.loadAll();
+
+        //Loading commands
+        this.Logger.info({label: "Loading", message: "Command Handlers"});
         this.commandHandler.loadAll();
+
+        //Loggin in to discord
+        this.Logger.info({label: "Connecting", message: "Trying to stablish connection with discord."});
         this.login()
     }
 }
