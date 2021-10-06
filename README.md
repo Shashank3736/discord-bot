@@ -5,6 +5,7 @@
 * Use mongoDB to save data.
 * Auto update with a new releases.
 * Notify whenever we release a new code.
+* Provide support through bot dm
 
 # Under construction
 
