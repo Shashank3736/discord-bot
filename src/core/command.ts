@@ -13,8 +13,8 @@ export class Command {
     public _developer: boolean;
     public client: BotClient;
 
-    constructor(option: SlashCommandBuilder, client: BotClient) {
-        option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
+    constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, client: BotClient) {
+        // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
         this.data = option;
         this.permit_level = 1;
         this._channel = 1;
@@ -67,8 +67,9 @@ export class Command {
 
     async _check(interaction: CommandInteraction) {
         if(this._developer) return (process.env.OWNER_ID === interaction.user.id);
+        if(!interaction.guildId) return true;
         const guild_perms = new PermissionManager(interaction.client, interaction.guildId);
-        return (await guild_perms.getMemberLevel(interaction.user.id)) >= guild_perms.get(this.data.name, "COMMAND", this.permit_level);
+        return (await guild_perms.getMemberLevel(interaction.user.id)) >= this.getPermitLevel(interaction.guildId);
     }
 
     exec(interaction: CommandInteraction) {

@@ -11,10 +11,10 @@ const permsSlashCommand = new SlashCommandBuilder()
 .setDescription('Customise the permissions for your server bot commands.')
 .addSubcommand(subcmd => subcmd.setName('enable')
     .setDescription('Enable a command in your server.')
-    .addStringOption(option => option.setName('command').setRequired(true)))
+    .addStringOption(option => option.setName('command').setDescription('Command you want to enable.').setRequired(true)))
 .addSubcommand(subcmd => subcmd.setName('disable')
     .setDescription('Disable a command in your server.')
-    .addStringOption(opt => opt.setName('command').setRequired(true)))
+    .addStringOption(opt => opt.setName('command').setDescription('Command you want to disable in a server.').setRequired(true)))
     //add group= "add";
     .addSubcommandGroup(grp => grp.setName('set')
         .setDescription('Add or change permission level for your server')
@@ -192,7 +192,7 @@ module.exports = class PermissionCommand extends Command {
         if(!interaction.guildId) return interaction.reply({ ephemeral: true, content: "MISSING_GUILD_ID: This command can only be run inside a server."});
         const permsManager = new PermissionManager(interaction.client, interaction.guildId);
         const target = interaction.options.getRole('role', true);
-        const permit = permsManager.get(target.id, "ROLE", 1);
+        const permit = await permsManager.get(target.id, "ROLE", 1);
 
         interaction.reply({ content: `Permit level for role ${target.toString()}: \`${permit}\``});
         return;
@@ -202,7 +202,7 @@ module.exports = class PermissionCommand extends Command {
         if(!interaction.guildId) return interaction.reply({ ephemeral: true, content: "MISSING_GUILD_ID: This command can only be run inside a server."});
         const permsManager = new PermissionManager(interaction.client, interaction.guildId);
         const target = interaction.options.getUser('user', true);
-        const permit = permsManager.getMemberLevel(target.id);
+        const permit = await permsManager.getMemberLevel(target.id);
 
         interaction.reply({ content: `Permit level for ${target.toString()}: \`${permit}\`` });
         return;

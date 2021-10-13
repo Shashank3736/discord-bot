@@ -18,7 +18,7 @@ module.exports = class HelpCommand extends Command{
 
         if(command) {
             const cmd = interaction.client.commands.get(command);
-            if(!cmd) return interaction.reply({ ephemeral: true, content: `ERROR: COMMAND NOT AVAILABLE.`});
+            if(!cmd) interaction.reply({ ephemeral: true, content: `ERROR: COMMAND NOT AVAILABLE.`});
             else cmd.help(interaction);
         } else {
             const embed = new MessageEmbed()
@@ -31,6 +31,8 @@ module.exports = class HelpCommand extends Command{
                 description += `\`${cmd.name}\`: ${cmd.description}\n`;
             }
             embed.setDescription(description);
+
+            interaction.reply({ ephemeral: hide, embeds: [embed]});
         }
     }
 }

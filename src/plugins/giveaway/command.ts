@@ -1,17 +1,58 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { Giveaway, GiveawayStartOptions } from "discord-giveaways";
+import { CommandInteraction } from "discord.js";
+import { BotClient } from "../../core/client";
+import { Command } from "../../core/command";
+import { giveawaySlashCommand } from "./slash";
+const ms = require('@shreyash21/ms');
 
-const giveawaySlashCommand = new SlashCommandBuilder()
-.setName('giveaway')
-.setDescription('Create, edite, reroll giveaway by using this command.')
-.addSubcommand(cmd => cmd.setName('start').setDescription('Start giveaway in your server!')
-    .addStringOption(opt => opt.setName('prize').setDescription('Prize the winner will get in this giveaway.').setRequired(true))
-    .addStringOption(opt => opt.setRequired(true).setName('duration').setDescription('How long this giveaway will run?'))
-    .addIntegerOption(opt => opt.setName('winners').setDescription('No. of winners').setRequired(true))
-    .addRoleOption(opt => opt.setName('role_requirement').setDescription('Role require to participate in this giveaway.'))
-    .addStringOption(opt => opt.setName('message_requirement').setDescription('No. of messages required to participate in a giveaway.'))
-    .addStringOption(opt => opt.setDescription('Server member must join to participate in this giveaway.').setName('server_requirement')))
-.addSubcommand(cmd => cmd.setName('end').setDescription('End an ongoing giveaway in your server.')
-    .addStringOption(opt => opt.setName('giveaway_id').setDescription('Giveaway ID of the giveaway you want to end.').setRequired(true)))
-.addSubcommand(cmd => cmd.setName('reroll').setDescription('Reroll giveaway in your server.')
-    .addStringOption(opt => opt.setName('giveaway_id').setRequired(true).setDescription('Giveaway ID of the giveaway you want to reroll.')))
-.addSubcommandGroup(cmd => cmd.setName('edit').setDescription('Edit a giveaway in your server'))
+export class GiveawayCommand extends Command{
+    constructor(client: BotClient) {
+        super(giveawaySlashCommand, client);
+        this.permit_level = 3;
+    }
+
+    async cmd_start(interaction: CommandInteraction) {
+        const duration = ms(interaction.options.getString('duration', true));
+        if(duration === 0) return 
+        const channel = interaction.options.getChannel('channel', true);
+        const extraData: any = {};
+
+        const role_requirement = interaction.options.getRole('role_requirement', false);
+        const message_requirement = interaction.options.getInteger('message_requirement', false);
+        const server_requirement = interaction.options.getString('server_requirement', false);
+
+        extraData.role_requirement = role_requirement? role_requirement.id: '';
+        extraData.message_requirement = message_requirement || 0;
+        if(server_requirement) {
+            const guildInvite = await this.client.fetchInvite(server_requirement);
+            if(!guildInvite || !guildInvite.guild) return interaction.reply({ content: 'No server found please recheck your invite link.' });
+            const isClient = this.client.guilds.cache.has(guildInvite.guild.id) || await this.client.guilds.fetch(guildInvite.guild.id);
+            if(!isClient) return interaction.reply({ content: `Add bot in server **${guildInvite.guild.name}** then start giveaway.` });
+            extraData.server_requirement = {
+                id: guildInvite.guild.id,
+                name: guildInvite.guild.name,
+                invite: server_requirement
+            }
+        } else extraData.server_requirement = {};
+
+        const startOption: GiveawayStartOptions = {
+            prize: interaction.options.getString('prize', true),
+            winnerCount: interaction.options.getInteger('winnerCount', true),
+            duration: ms(interaction.options.getString('duration', true)),
+            extraData: extraData,
+            embedColor: "GREEN",
+            embedColorEnd: "RED",
+            hostedBy: interaction.user
+        }
+
+        this.client.options.giveawayManager.start(channel, startOption)
+        .then((giveaway: Giveaway) => {
+            const msg = `${interaction.user.toString()} your giveaway successfully started in ${channel.toString()}
+
+            GiveawayID: ${giveaway.messageId}
+            Message: ${giveaway.message?.url}`;
+            return interaction.reply({ content: msg });
+        })
+        .catch((err: any) => interaction.reply({ content: `ERROR: ${err}`}));
+    }
+}

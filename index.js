@@ -1,3 +1,4 @@
-const db = require('quick.db');
+const ms = require('@shreyash21/ms')
+const time = ms('2 ent');
 
-console.log(db.all());
+console.log(time)
