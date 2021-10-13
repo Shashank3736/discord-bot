@@ -27,15 +27,19 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
-    "@shreyash21/ms": "^1.3.0",
-    "captcha-canvas": "^3.0.0",
+    "@shreyash21/ms": "^2.0.1",
+    "captcha-canvas": "^3.0.4",
     "discord-api-types": "^0.23.1",
+    "discord-giveaways": "^5.0.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "mongoose": "^6.0.9",
+    "mongoose": "^6.0.10",
+    "node-fetch": "^2.6.1",
+    "quick.db": "^7.1.3",
     "recursive-readdir": "^2.2.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.15.8",
     "@types/node": "^16.10.2",
     "@types/recursive-readdir": "^2.2.0",
     "typescript": "^4.4.3"

@@ -1,0 +1,17 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
+
+const giveawaySlashCommand = new SlashCommandBuilder()
+.setName('giveaway')
+.setDescription('Create, edite, reroll giveaway by using this command.')
+.addSubcommand(cmd => cmd.setName('start').setDescription('Start giveaway in your server!')
+    .addStringOption(opt => opt.setName('prize').setDescription('Prize the winner will get in this giveaway.').setRequired(true))
+    .addStringOption(opt => opt.setRequired(true).setName('duration').setDescription('How long this giveaway will run?'))
+    .addIntegerOption(opt => opt.setName('winners').setDescription('No. of winners').setRequired(true))
+    .addRoleOption(opt => opt.setName('role_requirement').setDescription('Role require to participate in this giveaway.'))
+    .addStringOption(opt => opt.setName('message_requirement').setDescription('No. of messages required to participate in a giveaway.'))
+    .addStringOption(opt => opt.setDescription('Server member must join to participate in this giveaway.').setName('server_requirement')))
+.addSubcommand(cmd => cmd.setName('end').setDescription('End an ongoing giveaway in your server.')
+    .addStringOption(opt => opt.setName('giveaway_id').setDescription('Giveaway ID of the giveaway you want to end.').setRequired(true)))
+.addSubcommand(cmd => cmd.setName('reroll').setDescription('Reroll giveaway in your server.')
+    .addStringOption(opt => opt.setName('giveaway_id').setRequired(true).setDescription('Giveaway ID of the giveaway you want to reroll.')))
+.addSubcommandGroup(cmd => cmd.setName('edit').setDescription('Edit a giveaway in your server'))

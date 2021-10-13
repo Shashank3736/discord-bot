@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 export async function clean (text: any): Promise<string> {
     if (text && text.constructor.name === 'Promise') text = await text
     if (typeof text !== 'string') text = require('util').inspect(text, { depth: 1 })
@@ -22,3 +24,7 @@ export function hastebin (input: any, extension?: string): Promise<string> {
         }).catch(e => reject(e))
     });
 }
+
+export function log(message: any) {
+  if(process.env.DEBUG) console.log(message);
+};
