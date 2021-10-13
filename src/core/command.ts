@@ -5,6 +5,7 @@ import { BotClient } from "./client";
 import { PermissionManager } from "./permission";
 
 export class Command {
+    [index: string]: any;
     public data: SlashCommandSubcommandsOnlyBuilder | SlashCommandSubcommandGroupBuilder;
     public permit_level: 1 | 2 | 3 | 4 | 5;
     public _description?: string;
@@ -12,6 +13,7 @@ export class Command {
     public _bot_permission: PermissionResolvable[];
     public _developer: boolean;
     public client: BotClient;
+    public module: string;
 
     constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, client: BotClient) {
         // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
@@ -21,6 +23,11 @@ export class Command {
         this._bot_permission = ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS", "USE_APPLICATION_COMMANDS"];
         this._developer = false;
         this.client = client;
+        this.module = 'General'
+    }
+
+    async _check_bypass(interaction: CommandInteraction) {
+        return false
     }
 
     getPermitLevel(guildID?: string) {

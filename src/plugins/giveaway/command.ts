@@ -1,19 +1,26 @@
 import { Giveaway, GiveawayStartOptions } from "discord-giveaways";
 import { CommandInteraction } from "discord.js";
+import { table } from "quick.db";
 import { BotClient } from "../../core/client";
 import { Command } from "../../core/command";
+import { GiveawayHandler } from "./manager";
 import { giveawaySlashCommand } from "./slash";
 const ms = require('@shreyash21/ms');
 
-export class GiveawayCommand extends Command{
-    constructor(client: BotClient) {
+const db = new table('giveaway');
+
+export class GiveawayCommand extends Command {
+    public giveawayManager: GiveawayHandler;
+
+    constructor(client: BotClient, manager: GiveawayHandler) {
         super(giveawaySlashCommand, client);
         this.permit_level = 3;
+        this.giveawayManager = manager;
     }
 
     async cmd_start(interaction: CommandInteraction) {
-        const duration = ms(interaction.options.getString('duration', true));
-        if(duration === 0) return 
+        const duration = interaction.options.getString('duration', true);
+        if(ms(duration) === 0) return interaction.reply({ content: `I'm not able to understand. What do you mean by \`duration:\` **${duration}**`});
         const channel = interaction.options.getChannel('channel', true);
         const extraData: any = {};
 
@@ -45,7 +52,7 @@ export class GiveawayCommand extends Command{
             hostedBy: interaction.user
         }
 
-        this.client.options.giveawayManager.start(channel, startOption)
+        this.giveawayManager.start(channel, startOption)
         .then((giveaway: Giveaway) => {
             const msg = `${interaction.user.toString()} your giveaway successfully started in ${channel.toString()}
 
@@ -55,4 +62,16 @@ export class GiveawayCommand extends Command{
         })
         .catch((err: any) => interaction.reply({ content: `ERROR: ${err}`}));
     }
+
+    async cmd_end(interaction: CommandInteraction) {
+        const giveaway_id = interaction.options.getString('giveaway_id', true);
+        this.giveawayManager.end(giveaway_id)
+        .then(members => interaction.reply({ content: `Giveaway is ended with ${members.length === 0 ? '`None`' : members.map(mem => mem.toString()).join(' ')} as winners.`}))
+        .catch(err => interaction.reply({ content: `No such giveaway exist in this server.`}));
+
+        return;
+    }
+
+    async cmd_reroll() {}
+    async cmd_edit() {}
 }

@@ -4,7 +4,7 @@ import { BotClient } from './core/client';
 import { PermissionManager } from './core/permission'
 import { clean, log } from './helper/util';
 import { connect, connection } from 'mongoose';
-import { readdir } from 'fs';
+import { readdir, statSync } from 'fs';
 import { join } from 'path';
 //client
 const client = new BotClient();
@@ -28,6 +28,18 @@ readdir(join(__dirname, 'commands'), (_err, files) => {
         client.commands.set(command.data.name, command);
     }
 });
+
+readdir(join(__dirname, 'events'), (_err, files) => {
+    files = files.filter((file) => statSync('./events/'+file).isFile());
+
+    for (const file of files) {
+        log('./events/'+file);
+        const eventFile = require('./events/'+file);
+        log(`Event loaded: ${file.split('.')[0]}`);
+
+        client.on(file.split('.')[0], eventFile.bind(null, client))
+    }
+});
 //load commands
 client.once('ready', () => {
     console.log("Client is ready!");
@@ -42,29 +54,5 @@ client.on('guildCreate', guild => {
     guild_perms.set(guild.ownerId, "USER", 5);
 });
 
-client.on('interactionCreate', async interaction => {
-    //check interaction is command interaction or not.
-    if(!interaction.isCommand()) return;
-    //
-    const command = client.commands.get(interaction.commandName);
-    if(!command) return interaction.reply( { content: "No such commands!" });
-
-    if(command._channel === 2 && interaction.channel?.type !== "DM") return interaction.reply({ content: "This command can only be executed in bot DM."});
-    if(command._channel === 1 && interaction.channel?.type !== "GUILD_TEXT") return interaction.reply({ content: "This command can only be executed in discord server."});
-
-    if(interaction.guild) interaction.permitManager = new PermissionManager(interaction.client, interaction.guild.id);
-
-    if(!(await command._check(interaction))) return interaction.reply({ ephemeral: true, content: "You are not allowed to run this command."});
-    if(!command.isAllowed(interaction)) return interaction.reply({ ephemeral: true, content: "Bot do not have sufficient permission to run this command. Contact server admins for solution."});
-    const subcmd = interaction.options.getSubcommand(false)
-    const subCmdGrp = interaction.options.getSubcommandGroup(false);
-    if(subcmd) {
-        if(subcmd === 'help') return command.help(interaction);
-        const cmd_fun_name = (subCmdGrp? subCmdGrp : 'cmd') + '_' + subcmd;
-        command[cmd_fun_name](interaction).catch(async (err: any) => interaction.reply({ content: `Error: ${await clean(err)}`}));
-    } else command.exec(interaction);
-    
-    return;
-})
 //login
 client.start()

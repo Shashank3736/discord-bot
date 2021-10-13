@@ -109,7 +109,7 @@ module.exports = class PermissionCommand extends Command {
         super(permsSlashCommand, client);
         this.permit_level = 5;
     }
-
+    //run when command= /permit set role
     async set_role(interaction: CommandInteraction) {
         if(!interaction.guildId) return interaction.reply({ ephemeral: true, content: "MISSING_GUILD_ID: This command can only be run inside a server."});
         const permsManager = new PermissionManager(interaction.client, interaction.guildId);
@@ -124,7 +124,7 @@ module.exports = class PermissionCommand extends Command {
             return interaction.reply({ ephemeral: true, content: `SET_ROLE_ERROR: ${error_txt}`});
         }
     }
-
+    //run when command= /permit set command
     async set_command(interaction: CommandInteraction) {
         if(!interaction.guildId) return interaction.reply({ ephemeral: true, content: "MISSING_GUILD_ID: This command can only be run inside a server."});
         const permsManager = new PermissionManager(interaction.client, interaction.guildId);

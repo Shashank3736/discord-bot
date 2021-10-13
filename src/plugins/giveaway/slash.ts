@@ -33,5 +33,23 @@ export const giveawaySlashCommand = new SlashCommandBuilder()
 //cmd unpause
 .addSubcommand(cmd => cmd.setName('unpause').setDescription('Unpause a giveawa in your server.')
     .addStringOption(opt => opt.setName('giveaway_id').setDescription('Giveaway ID of the giveaway you want to unpause.').setRequired(true)))
+//cmd list
+.addSubcommand(cmd => cmd.setName('list').setDescription('List giveaways active in this server.'))
+//cmd settings
+.addSubcommandGroup(cmd => cmd.setName('setting').setDescription('Configure giveaway settings for your server')
+    //cmd settings.set
+    .addSubcommand(cmd => cmd.setName('set').setDescription('Set giveaway data in your server.')
+        .addChannelOption(opt => opt.setName('giveawayChannel').setDescription('Channel where all giveaways will be posted if no channel mentioned in command.'))
+        .addIntegerOption(opt => opt.setName('winnerCount').setDescription('No. of winner(s) in a giveaway, if no winnerCount is provided.'))
+        .addRoleOption(opt => opt.setName('participationRole').setDescription('Role required to participate in all giveaways.'))
+        .addRoleOption(opt => opt.setName('host').setDescription('Role required to create a giveaway')))
+    //cmd settings.reset
+    .addSubcommand(opt => opt.setName('reset').setDescription('Reset all the current giveaway data of your server.'))
+    //cmd settings.remove
+    .addSubcommand(cmd => cmd.setName('remove').setDescription('Remove a giveaway data from your server')
+        .addStringOption(opt => opt.setName('data').setRequired(true).setDescription('Giveaway data.')
+            .addChoices([["Giveaway Channel", 'giveawayChannel'], ['Winner Count', 'winnerCount'], ['Participation role', 'participationRole'], ['Giveaway Host', 'host']])))
+    //cmd settings.show
+    .addSubcommand(cmd => cmd.setName('show').setDescription('Show current giveaway settings.')))
 
 
