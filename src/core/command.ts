@@ -80,7 +80,7 @@ export class Command {
     }
 
     async exec(interaction: CommandInteraction) {
-        throw new Error("COMMAND ERROR: No execution function");
+        interaction.reply({ content: "Command is still in progress. Please wait for some more time.", ephemeral: true });
     }
 
     toJSON() {

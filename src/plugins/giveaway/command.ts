@@ -19,6 +19,7 @@ export class GiveawayCommand extends Command {
     }
 
     async cmd_start(interaction: CommandInteraction) {
+        if(!interaction.guild) return interaction.reply({ ephemeral: true, content: "Command can only be executed in a server"})
         const duration = interaction.options.getString('duration', true);
         if(ms(duration) === 0) return interaction.reply({ content: `I'm not able to understand. What do you mean by \`duration:\` **${duration}**`});
         if(ms(duration) < ms('30 s')) return interaction.reply({ content: `Giveaway for less than 30 sec is not allowed.`});
@@ -42,6 +43,10 @@ export class GiveawayCommand extends Command {
                 invite: server_requirement
             }
         } else extraData.server_requirement = {};
+
+        if(extraData.message_requirement) {
+            db.set(interaction.guild.id +'.'+'messageCount.guild', extraData.message_requirement);
+        }
 
         const startOption: GiveawayStartOptions = {
             prize: interaction.options.getString('prize', true),
