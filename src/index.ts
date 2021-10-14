@@ -4,7 +4,7 @@ import { BotClient } from './core/client';
 import { PermissionManager } from './core/permission'
 import { clean, log } from './helper/util';
 import { connect, connection } from 'mongoose';
-import { readdir, statSync } from 'fs';
+import { readdir, statSync, writeFileSync } from 'fs';
 import { join } from 'path';
 //client
 const client = new BotClient();
@@ -43,8 +43,14 @@ readdir(join(__dirname, 'events'), (_err, files) => {
 //load commands
 client.once('ready', () => {
     console.log("Client is ready!");
-    // const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
-    // const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
+    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
+    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
+    const dataJSON = {
+        commands: commands,
+        developerCommands: developerCommand
+    };
+    const data = JSON.stringify(dataJSON);
+    writeFileSync(join(__dirname, 'config.json'), data);
     // addGlobalCommands(commands);
     // addGuildCommands(developerCommand);
 });

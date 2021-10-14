@@ -38,13 +38,14 @@ export class Command {
     }
 
     async help(interaction: CommandInteraction) {
+        let permit_level = this.permit_level;
         if(interaction.guildId) {
-            this.permit_level = this.getPermitLevel(interaction.guildId);
+            permit_level = this.getPermitLevel(interaction.guildId);
         }
 
         let description: string = `${this.data.description}
         
-        Permit Level: \`${interaction.guildId? this.getPermitLevel(interaction.guildId): this.getPermitLevel()}\`\n\n`;
+        Permit Level: \`${permit_level}\`\n\n`;
         if(this._description) description += this._description;
 
         for (const subcmd of this.toJSON().options.filter(opt => opt.type === 1)) {

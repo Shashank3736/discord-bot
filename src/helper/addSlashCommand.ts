@@ -1,6 +1,7 @@
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
+import { BotClient } from "../core/client";
 
 const log = content => process.env.DEBUG && console.log(content);
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
@@ -46,4 +47,21 @@ export async function addGuildCommands(commands: ({
     );
 
     log('Successfully reloaded application (/) commands.');
+}
+
+export function refreshCommand(client: BotClient) {
+    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
+    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
+    addGlobalCommands(commands);
+    addGuildCommands(developerCommand);
+}
+
+export function refreshGlobalCommand(client: BotClient) {
+    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
+    addGlobalCommands(commands);
+}
+
+export function refreshGuildCommand(client: BotClient) {
+    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
+    addGuildCommands(developerCommand);
 }
