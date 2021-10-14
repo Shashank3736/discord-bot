@@ -1,4 +1,3 @@
-const ms = require('@shreyash21/ms')
-const time = ms('2 ent');
+const db = require('quick.db');
 
-console.log(time)
+console.log(db.get('678206596731371520.permission'));

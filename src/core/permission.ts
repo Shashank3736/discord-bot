@@ -66,4 +66,9 @@ export class PermissionManager {
 
     return roleLvl > memberLvl ? roleLvl : memberLvl;
   }
+
+  reset() {
+    this.permission = [];
+    return db.set(`${this.guildID}.permission`, []);
+  }
 }

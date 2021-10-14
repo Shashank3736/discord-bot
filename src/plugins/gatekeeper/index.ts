@@ -55,26 +55,32 @@ module.exports = (client: BotClient) => {
         });
 
         collector.on('end', (_collected, reason) => {
-            const embed = new MessageEmbed().setTimestamp().setThumbnail(member.displayAvatarURL());
+            const embed = new MessageEmbed()
+            .setTimestamp()
+            .setThumbnail(member.displayAvatarURL())
+            .addField('Member:', member.toString())
+            .addField('Joined At:', `${member.joinedAt}`)
+            .setImage('attachment://captcha.png');
             if(reason === 'MEMBER IS NOT A BOT') {
+                if(guildConfig.entry_role_id) member.roles.add(guildConfig.entry_role_id);
                 embed.setColor('DARK_GREEN')
-                .setDescription(`Member: ${member.toString()}
-                Joined at: \`${member.joinedAt}\`
-                Veification: \`Passed\`
-                Action: \`Entry role provide.\``);
+                .addField('Verification:', '`Passed`')
+                .addField('Action:', guildConfig.entry_role_id ? `<@&${guildConfig.entry_role_id}>` : '`None`')
             }
             else {
                 member.send('You failed to solve captcha that\'s why we decide to '+actionData[guildConfig.action - 1]+' you.')
                 .catch(err=> err);
-                embed.setDescription(`Member: ${member.toString()}
-                Joined at: \`${member.joinedAt}\`
-                Veification: \`Failed\`
-                Action: \`${actionData[guildConfig.action - 1]}\``)
+                embed
                 .setColor("RED")
+                .addField('Verification:', '`Failed`', true)
+                .addField('Action:', actionData[guildConfig.action - 1], true)
+
+                if(guildConfig.action === 2) member.kick('Failed to verify!');
+                if(guildConfig.action === 3) member.ban({ reason: 'Failed to verofy!' });
             }
             const channel = member.guild.channels.cache.get(guildConfig.log_channel_id || '');
             if(!channel || !channel.isText()) return;
-            channel.send({ embeds: [embed] });
+            channel.send({ embeds: [embed], files: [file] });
         });
     });
 

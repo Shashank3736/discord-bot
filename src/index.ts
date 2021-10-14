@@ -30,7 +30,7 @@ readdir(join(__dirname, 'commands'), (_err, files) => {
 });
 
 readdir(join(__dirname, 'events'), (_err, files) => {
-    files = files.filter((file) => statSync('./events/'+file).isFile());
+    files = files.filter((file) => statSync(join(__dirname, 'events', file)).isFile());
 
     for (const file of files) {
         log('./events/'+file);

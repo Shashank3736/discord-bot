@@ -65,7 +65,7 @@ export class SetupCommand extends Command {
         .addField('Status', guildConfig.status ? '`Enable`' : '`Disable`', true)
         .addField('Action', actionData[guildConfig.action - 1], true)
         .addField('Duration', `${ms(guildConfig.duration)}`, true)
-        .addField('Entry role', guildConfig.entry_role_id?`<&@${guildConfig.entry_role_id}`: '`None`', true)
+        .addField('Entry role', guildConfig.entry_role_id?`<@&${guildConfig.entry_role_id}>`: '`None`', true)
         .addField('Log channel', guildConfig.log_channel_id ? `<#${guildConfig.log_channel_id}>`: '*`None`*', true)
         .setImage('attachment://'+captcha.text+'.png');
 
@@ -86,7 +86,7 @@ export class SetupCommand extends Command {
         .addField('Status', guildConfig.status ? '`Enable`' : '`Disable`', true)
         .addField('Action', actionData[guildConfig.action - 1], true)
         .addField('Duration', `${ms(guildConfig.duration)}`, true)
-        .addField('Entry role', guildConfig.entry_role_id?`<&@${guildConfig.entry_role_id}`: '`None`', true)
+        .addField('Entry role', guildConfig.entry_role_id?`<@&${guildConfig.entry_role_id}>`: '`None`', true)
         .addField('Log channel', guildConfig.log_channel_id ? `<#${guildConfig.log_channel_id}>`: '*`None`*', true)
         .setImage('attachment://'+captcha.text+'.png');
 

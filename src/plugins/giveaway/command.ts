@@ -21,6 +21,7 @@ export class GiveawayCommand extends Command {
     async cmd_start(interaction: CommandInteraction) {
         const duration = interaction.options.getString('duration', true);
         if(ms(duration) === 0) return interaction.reply({ content: `I'm not able to understand. What do you mean by \`duration:\` **${duration}**`});
+        if(ms(duration) < ms('30 s')) return interaction.reply({ content: `Giveaway for less than 30 sec is not allowed.`});
         const channel = interaction.options.getChannel('channel', true);
         const extraData: any = {};
 
@@ -72,6 +73,7 @@ export class GiveawayCommand extends Command {
         return;
     }
 
-    async cmd_reroll() {}
-    async cmd_edit() {}
+    async exec(interaction: CommandInteraction) {
+        return interaction.reply({ ephemeral: true, content: `Giveaway is still not completed. Sorry for the inconvenience.`})
+    }
 }

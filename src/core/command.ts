@@ -79,7 +79,7 @@ export class Command {
         return (await guild_perms.getMemberLevel(interaction.user.id)) >= this.getPermitLevel(interaction.guildId);
     }
 
-    exec(interaction: CommandInteraction) {
+    async exec(interaction: CommandInteraction) {
         throw new Error("COMMAND ERROR: No execution function");
     }
 
