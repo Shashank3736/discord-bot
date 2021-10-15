@@ -8,4 +8,7 @@ module.exports = async (client: BotClient) => {
 
     const command = new GiveawayCommand(client, manager);
     client.commands.set(command.data.name, command);
+
+    require('./events/giveawayReactionAdded')(manager);
+    require('./events/messageCreate')(client);
 }

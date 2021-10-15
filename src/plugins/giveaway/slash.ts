@@ -10,7 +10,7 @@ export const giveawaySlashCommand = new SlashCommandBuilder()
     .addStringOption(opt => opt.setRequired(true).setName('duration').setDescription('How long this giveaway will run?'))
     .addIntegerOption(opt => opt.setName('winners').setDescription('No. of winners').setRequired(true))
     .addRoleOption(opt => opt.setName('role_requirement').setDescription('Role require to participate in this giveaway.'))
-    .addStringOption(opt => opt.setName('message_requirement').setDescription('No. of messages required to participate in a giveaway.'))
+    .addIntegerOption(opt => opt.setName('message_requirement').setDescription('No. of messages required to participate in a giveaway.'))
     .addStringOption(opt => opt.setDescription('Server member must join to participate in this giveaway.').setName('server_requirement')))
 //cmd end
 .addSubcommand(cmd => cmd.setName('end').setDescription('End an ongoing giveaway in your server.')
