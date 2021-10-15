@@ -73,7 +73,7 @@ export class GiveawayCommand extends Command {
         const giveaway_id = interaction.options.getString('giveaway_id', true);
         this.giveawayManager.end(giveaway_id)
         .then(members => interaction.reply({ content: `Giveaway is ended with ${members.length === 0 ? '`None`' : members.map(mem => mem.toString()).join(' ')} as winners.`}))
-        .catch(err => interaction.reply({ content: `No such giveaway exist in this server.`}));
+        .catch(err => interaction.reply({ content: `No such giveaway exist in this server.`, ephemeral: true }));
 
         return;
     }

@@ -13,7 +13,7 @@ async function commandCreate(client: BotClient, interaction: CommandInteraction)
     if(command._channel === 1 && interaction.channel?.type !== "GUILD_TEXT") return interaction.reply({ content: "This command can only be executed in discord server."});
     //check if guild then setup permitManager
     if(interaction.guild) interaction.permitManager = new PermissionManager(interaction.client, interaction.guild.id);
-    if(interaction.guild && command.getPermitLevel(interaction.guild.id)) return interaction.reply({ ephemeral: true,
+    if(interaction.guild && command.getPermitLevel(interaction.guild.id) === -1) return interaction.reply({ ephemeral: true,
     content: `Command is disabled in your server.`});
     //check is bot or user allowed to run the command or not
     if(!(await command._check(interaction)) && !(await command._check_bypass(interaction))) return interaction.reply({ ephemeral: true, content: "You are not allowed to run this command."});

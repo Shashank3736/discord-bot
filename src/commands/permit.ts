@@ -13,20 +13,20 @@ const permsSlashCommand = new SlashCommandBuilder()
   .addSubcommand((cmd) => cmd.setName('reset').setDescription('Reset permit level in your server to default.'))
   .addSubcommand((subcmd) => subcmd.setName('enable')
     .setDescription('Enable a command in your server.')
-    .addStringOption((option) => option.setName('command').setDescription('Command you want to enable.').setRequired(true)))
+    .addStringOption((option) => option.setName('command').setDescription('Write the name of command.').setRequired(true)))
   .addSubcommand((subcmd) => subcmd.setName('disable')
     .setDescription('Disable a command in your server.')
-    .addStringOption((opt) => opt.setName('command').setDescription('Command you want to disable in a server.').setRequired(true)))
+    .addStringOption((opt) => opt.setName('command').setDescription('Write the name of command.').setRequired(true)))
 // add group= "add";
   .addSubcommandGroup((grp) => grp.setName('set')
-    .setDescription('Add or change permission level for your server')
+    .setDescription('Set permission level for your server')
     .addSubcommand((subcmd) => subcmd
     // add cmd = "role";
       .setName('role')
       .setDescription('Set permission level for a role.')
       .addIntegerOption((option) => option
         .setName('permit_level')
-        .setDescription('Permission level you want to add.')
+        .setDescription('Choose permit level.')
         .addChoice('REGULAR', 1)
         .addChoice('SUPPORTER', 2)
         .addChoice('MODERATOR', 3)
@@ -35,7 +35,7 @@ const permsSlashCommand = new SlashCommandBuilder()
         .setRequired(true))
       .addRoleOption((option) => option
         .setName('role')
-        .setDescription('Role you want to add the permission level.')
+        .setDescription('Choose role.')
         .setRequired(true)))
   // add cmd = "user";
     .addSubcommand((subcmd) => subcmd
@@ -43,7 +43,7 @@ const permsSlashCommand = new SlashCommandBuilder()
       .setDescription('Set permission for a member.')
       .addIntegerOption((option) => option
         .setName('permit_level')
-        .setDescription('Permission level you want to add.')
+        .setDescription('Choose permit level')
         .addChoice('REGULAR', 1)
         .addChoice('SUPPORTER', 2)
         .addChoice('MODERATOR', 3)
@@ -52,15 +52,15 @@ const permsSlashCommand = new SlashCommandBuilder()
         .setRequired(true))
       .addUserOption((option) => option
         .setName('user')
-        .setDescription('User you want to add the permission level.')
+        .setDescription('Select user.')
         .setRequired(true)))
     .addSubcommand((subcmd) => subcmd
       .setName('command')
       .setDescription('Set new permission level for your server command')
-      .addStringOption((option) => option.setName('command').setRequired(true).setDescription('Command you want to set permission for.'))
+      .addStringOption((option) => option.setName('command').setRequired(true).setDescription('Write the name of command.'))
       .addIntegerOption((option) => option
         .setName('permit_level')
-        .setDescription('Permission level you want to add.')
+        .setDescription('Select permit level.')
         .addChoice('REGULAR', 1)
         .addChoice('SUPPORTER', 2)
         .addChoice('MODERATOR', 3)
@@ -74,18 +74,18 @@ const permsSlashCommand = new SlashCommandBuilder()
       .setDescription('Remove permission level from a role.')
       .addRoleOption((option) => option
         .setName('role')
-        .setDescription('Role you want to remove the permission level.')
+        .setDescription('Choose the role.')
         .setRequired(true)))
     .addSubcommand((subcmd) => subcmd
       .setName('user')
       .setDescription('Remove permission level from a member.')
       .addUserOption((option) => option
         .setName('user')
-        .setDescription('User you want to remove the permission level.')
+        .setDescription('Choose the member.')
         .setRequired(true)))
     .addSubcommand((subcmd) => subcmd.setName('command')
       .setDescription('Commad you want to get permission level')
-      .addStringOption((option) => option.setName('command').setDescription('Command you want to check permission level.').setRequired(true))))
+      .addStringOption((option) => option.setName('command').setDescription('Write the name of command.').setRequired(true))))
   .addSubcommandGroup((grp) => grp.setName('get')
     .setDescription('Get permit level of a role, user, or command.')
     .addSubcommand((subcmd) => subcmd
@@ -93,18 +93,18 @@ const permsSlashCommand = new SlashCommandBuilder()
       .setDescription('Check permission level of a role.')
       .addRoleOption((option) => option
         .setName('role')
-        .setDescription('Role you want to check the permission level.')
+        .setDescription('Choose the role')
         .setRequired(true)))
     .addSubcommand((subcmd) => subcmd
       .setName('user')
       .setDescription('Check permission level of a member.')
       .addUserOption((option) => option
         .setName('user')
-        .setDescription('User you want to check the permission level.')
+        .setDescription('Choose the member.')
         .setRequired(true)))
     .addSubcommand((subcmd) => subcmd.setName('command')
       .setDescription('Commad you want to get permission level')
-      .addStringOption((option) => option.setName('command').setDescription('Command you want to check permission level.').setRequired(true))));
+      .addStringOption((option) => option.setName('command').setDescription('Write the name of command.').setRequired(true))));
 
 module.exports = class PermissionCommand extends Command {
   constructor(client: BotClient) {

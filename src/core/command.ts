@@ -53,7 +53,6 @@ export class Command {
         }
 
         for (const grp of this.toJSON().options.filter(opt => opt.type === 2)) {
-            grp.
             description += `**${grp.name}**\n${grp.description}\n`
             for (const subcmd of grp.options.filter(opt => opt.type === 1)) {
                 description += `- \`${subcmd.name}\`: ${subcmd.description}\n`

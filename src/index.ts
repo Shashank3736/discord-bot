@@ -50,7 +50,7 @@ client.once('ready', () => {
         developerCommands: developerCommand
     };
     const data = JSON.stringify(dataJSON);
-    writeFileSync(join(__dirname, 'config.json'), data);
+    writeFileSync('commands.json', data);
     // addGlobalCommands(commands);
     // addGuildCommands(developerCommand);
 });
