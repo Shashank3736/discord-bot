@@ -16,7 +16,6 @@ module.exports = class HelpCommand extends Command {
   async exec(interaction: CommandInteraction) {
     const command = interaction.options.getString('command', false);
     const hide = interaction.options.getBoolean('hide', false) || false;
-    const all = interaction.options.getBoolean('all', false);
 
     if (command) {
       const cmd = this.client.commands.get(command);
