@@ -1,8 +1,11 @@
 import { SlashCommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from "@discordjs/builders";
 
-import { CommandInteraction, MessageEmbed, PermissionResolvable } from "discord.js";
+import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, PermissionResolvable } from "discord.js";
+import { createHelp } from "../helper/util";
 import { BotClient } from "./client";
 import { PermissionManager } from "./permission";
+
+const perms = ["REGULAR", "SUPPORTER", "MODERATOR", "ADMINISTRATOR", "OWNER"];
 
 export class Command {
     [index: string]: any;
@@ -38,33 +41,47 @@ export class Command {
     }
 
     async help(interaction: CommandInteraction) {
-        let permit_level = this.permit_level;
-        if(interaction.guildId) {
-            permit_level = this.getPermitLevel(interaction.guildId);
-        }
+        const permit_level = this.getPermitLevel(interaction.guild ? interaction.guild.id : undefined);
 
-        let description: string = `${this.data.description}
+        let description_1: string = `${this.data.description}
         
-        Permit Level: \`${permit_level}\`\n\n`;
-        if(this._description) description += this._description;
-
-        for (const subcmd of this.toJSON().options.filter(opt => opt.type === 1)) {
-            description += `- \`${subcmd.name}\`: ${subcmd.description}\n`
-        }
-
-        for (const grp of this.toJSON().options.filter(opt => opt.type === 2)) {
-            description += `\n**${grp.name}**\n${grp.description}\n`
-            for (const subcmd of grp.options.filter(opt => opt.type === 1)) {
-                description += `- \`${subcmd.name}\`: ${subcmd.description}\n`
-            }
-        }
+        Permit Level: \`${permit_level === Infinity ? `Almighty`: perms[permit_level - 1]}\`\n\n`;
+        if(this._description) description_1 += this._description + '\n';
+        const description = createHelp(this.toJSON());
+        
         const helpEmbed = new MessageEmbed()
         .setTitle(this.data.name)
-        .setDescription(description)
         .setThumbnail(this.client.user?.displayAvatarURL())
         .setColor('BLURPLE');
 
-        return interaction.reply({ embeds: [helpEmbed] });
+        if(this._description) {
+            helpEmbed.setDescription(description_1)
+
+            const filter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
+            
+            const nextButton = new MessageButton().setCustomId('next').setStyle('PRIMARY').setLabel('Next');
+            const prevButton = new MessageButton().setCustomId('prev').setLabel('Previous').setStyle('SECONDARY');
+
+            const row = new MessageActionRow()
+            .addComponents([
+                prevButton,
+                nextButton
+            ]);
+
+            interaction.reply({ embeds: [helpEmbed], components: [row] });
+
+            const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60000, componentType: 'BUTTON' });
+
+            collector?.on('collect', async i => {
+                if(i.customId === 'next') {
+                    i.update({ embeds: [helpEmbed.setDescription(description)] })
+                } else {
+                    i.update({
+                        embeds: [helpEmbed.setDescription(description_1)] });
+                }
+            });
+
+        } else return interaction.reply({ embeds: [helpEmbed.setDescription(description_1 + description)] });
     }
 
     isAllowed(interaction: CommandInteraction) {

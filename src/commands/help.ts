@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, CommandInteractionOptionResolver, MessageEmbed } from 'discord.js';
 import { BotClient } from '../core/client';
 import { Command } from '../core/command';
+import { createHelp } from '../helper/util';
 
 const data = new SlashCommandBuilder()
   .setName('help')
@@ -18,9 +19,41 @@ module.exports = class HelpCommand extends Command {
     const hide = interaction.options.getBoolean('hide', false) || false;
 
     if (command) {
-      const cmd = this.client.commands.get(command);
-      if (!cmd) interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
-      else cmd.help(interaction);
+      const commands = command.split(' ');
+      if(commands.length === 2) {
+        const cmd = this.client.commands.get(commands[0])?.toJSON();
+        if(!cmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+
+        const subcmd = cmd.options.find(sub => sub.name === commands[1]);
+        const description = createHelp(subcmd);
+
+        const embed = new MessageEmbed()
+        .setColor('AQUA')
+        .setTitle(`Help ${command}`)
+        .setDescription(description);
+
+        interaction.reply({ embeds: [embed] });
+      } else if(commands.length === 3) {
+        const cmd = this.client.commands.get(commands[0])?.toJSON();
+        if(!cmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+
+        const subcmdgrp = cmd.options.find(grp => grp.name === commands[1]);
+        if(!subcmdgrp) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+
+        const subcmd = subcmdgrp.options.find(sub => sub.name === commands[2]);
+        if(!subcmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+
+        const embed = new MessageEmbed()
+        .setColor('NAVY')
+        .setTitle(`Help for /${command}`)
+        .setDescription(createHelp(subcmd));
+
+        interaction.reply({ embeds: [embed] })
+      } else {
+        const cmd = this.client.commands.get(commands[0]);
+        if (!cmd) interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+        else cmd.help(interaction);
+      }
     } else {
       const embed = new MessageEmbed()
         .setTitle('Help')
@@ -35,5 +68,10 @@ module.exports = class HelpCommand extends Command {
 
       interaction.reply({ ephemeral: hide, embeds: [embed] });
     }
+  }
+
+  async adv_exec(interaction: CommandInteraction) {
+    const commandJSON = this.client.commands.map(cmd => cmd.toJSON());
+    const onlyCmd = commandJSON.filter(cmd => cmd.options)
   }
 };

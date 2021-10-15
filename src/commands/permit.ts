@@ -110,6 +110,18 @@ module.exports = class PermissionCommand extends Command {
   constructor(client: BotClient) {
     super(permsSlashCommand, client);
     this.permit_level = 5;
+    this._description = `You may set permissions based on individual command names, or permission levels.
+    
+    Acceptable permission levels are:
+    - **Owner** [5] (absolute control over the bot)
+    - **Administrator** [4] (administrative powers such as setting activities)
+    - **Moderator** [3] (ability to block)
+    - **Supporter** [2] (access to core Modmail supporting functions)
+    - **Regular** [1] (most basic interactions such as help and about)
+    
+    By default, owner is set to the absolute bot owner and regular is @everyone.
+    
+    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\``
   }
 
   // run when command= /permit set role
