@@ -43,8 +43,8 @@ readdir(join(__dirname, 'events'), (_err, files) => {
 //load commands
 client.once('ready', () => {
     console.log("Client is ready!");
-    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON()).sort();
-    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON()).sort();
+    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
+    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
     const dataJSON = {
         commands: commands,
         developerCommands: developerCommand
