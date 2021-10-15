@@ -24,8 +24,10 @@ async function commandCreate(client: BotClient, interaction: CommandInteraction)
     if(subcmd) {
         if(subcmd === 'help') return command.help(interaction);
         const cmd_fun_name = (subCmdGrp? subCmdGrp : 'cmd') + '_' + subcmd;
-        command[cmd_fun_name](interaction).catch(async (err: any) => command.exec(interaction)).catch((err: any) => interaction.reply({ ephemeral: true, content: `ERROR: ${err}` }));
-    } else command.exec(interaction).catch(err => interaction.reply({ ephemeral: true, content: `Something went wrong?\n\n ${err}` }));
+        if(!command[cmd_fun_name]) return command.exec(interaction);
+        command[cmd_fun_name](interaction);
+    } 
+    else command.exec(interaction).catch(err => interaction.reply({ ephemeral: true, content: `Something went wrong?\n\n ${err}` }));
 }
 
 async function buttonCreate(interaction: ButtonInteraction) {

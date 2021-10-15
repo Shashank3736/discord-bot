@@ -50,7 +50,7 @@ export class GiveawayCommand extends Command {
 
         const startOption: GiveawayStartOptions = {
             prize: interaction.options.getString('prize', true),
-            winnerCount: interaction.options.getInteger('winnerCount', true),
+            winnerCount: interaction.options.getInteger('winners', true),
             duration: ms(interaction.options.getString('duration', true)),
             extraData: extraData,
             embedColor: "GREEN",
