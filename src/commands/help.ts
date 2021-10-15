@@ -7,7 +7,7 @@ const data = new SlashCommandBuilder()
   .setName('help')
   .setDescription('Get help of a command.')
   .addStringOption((opt) => opt.setName('command').setDescription('Command you want help for.'))
-  .addBooleanOption((opt) => opt.setName('hide').setDescription('You want to hide help message or not.'));
+  .addBooleanOption((opt) => opt.setName('hide').setDescription('You want to hide help message or not.'))
 module.exports = class HelpCommand extends Command {
   constructor(client: BotClient) {
     super(data, client);
@@ -16,6 +16,7 @@ module.exports = class HelpCommand extends Command {
   async exec(interaction: CommandInteraction) {
     const command = interaction.options.getString('command', false);
     const hide = interaction.options.getBoolean('hide', false) || false;
+    const all = interaction.options.getBoolean('all', false);
 
     if (command) {
       const cmd = this.client.commands.get(command);
@@ -28,8 +29,8 @@ module.exports = class HelpCommand extends Command {
         .setColor('BLURPLE');
 
       let description = '';
-      for (const cmd of this.client.commands.map((cmdData) => cmdData.toJSON())) {
-        description += `\`${cmd.name}\`: ${cmd.description}\n`;
+      for (const [_id, cmd] of this.client.commands) {
+        description += `\`[${cmd.getPermitLevel(interaction.guild ? interaction.guild.id : undefined)}] ${cmd.data.name}\`: ${cmd.data.description}\n`;
       }
       embed.setDescription(description);
 
