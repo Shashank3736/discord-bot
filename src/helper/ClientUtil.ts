@@ -1,5 +1,5 @@
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
-import { CommandInteraction, Interaction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import { ButtonInteraction, CommandInteraction, Interaction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { openStdin } from "process";
 import { BotClient } from "../core/client";
 import { log } from "./util";
@@ -29,6 +29,10 @@ export class ClientUtil {
 
   constructor(client: BotClient) {
     this.client = client;
+  }
+
+  replyError(content: string, interaction: CommandInteraction | ButtonInteraction) {
+    return interaction.reply({ ephemeral: true, content: content});
   }
 
   commandFormat(cmd: cmdJSON2 | cmdJSON, prefix: string = '/'): string[] {

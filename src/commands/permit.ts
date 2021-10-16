@@ -187,7 +187,8 @@ module.exports = class PermissionCommand extends Command {
     const target = interaction.options.getString('command', true);
     const permit = interaction.options.getInteger('permit_level', true);
 
-    const cmd = interaction.client.commands.get(target);
+    const cmd = this.client.commands.get(target);
+    if(!cmd) return this.client.util.replyError(`No such command exist in database ${target}.`, interaction);
 
     try {
       permsManager.push(cmd.data.name, 'COMMAND', permit);
@@ -267,8 +268,10 @@ module.exports = class PermissionCommand extends Command {
     const permsManager = new PermissionManager(interaction.client, interaction.guildId);
     const target = interaction.options.getString('command', true);
 
-    const cmd = interaction.client.commands.get(target);
-    const permit = permsManager.get(cmd.data.name, 'COMMAND', cmd.permit_level);
+    const cmd = this.client.commands.get(target);
+    if(!cmd) return this.client.util.replyError(`No such command exist in database ${target}.`, interaction);
+
+    const permit = cmd.getPermitLevel(interaction.guild?.id);
 
     interaction.reply({ content: `Permit for **${cmd.data.name}**: \`${permit}\`` });
   }
@@ -278,7 +281,9 @@ module.exports = class PermissionCommand extends Command {
     const permsManager = new PermissionManager(interaction.client, interaction.guildId);
     const target = interaction.options.getString('command', true);
 
-    const cmd = interaction.client.commands.get(target);
+    const cmd = this.client.commands.get(target);
+    if(!cmd) return this.client.util.replyError(`No such command exist in database ${target}.`, interaction);
+
     permsManager.remove(cmd.data.name, 'COMMAND');
 
     interaction.reply({ content: 'Command successfully enabled in your server.' });
@@ -289,7 +294,9 @@ module.exports = class PermissionCommand extends Command {
     const permsManager = new PermissionManager(interaction.client, interaction.guildId);
     const target = interaction.options.getString('command', true);
 
-    const cmd = interaction.client.commands.get(target);
+    const cmd = this.client.commands.get(target);
+    if(!cmd) return this.client.util.replyError(`No such command exist in database ${target}.`, interaction);
+
     permsManager.push(cmd.data.name, 'COMMAND', -1);
 
     interaction.reply({ content: 'Command successfully disabled in your server.' });
