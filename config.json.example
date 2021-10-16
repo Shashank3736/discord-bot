@@ -1,0 +1,9 @@
+{
+  "emojis": {
+    "nextButton": "▶️",
+    "prevButton": "◀️",
+    "lastButton": "⏩",
+    "firstButton": "⏪",
+    "endButton": "❌"
+  }
+}

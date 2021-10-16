@@ -1,8 +1,8 @@
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
-import { ButtonInteraction, CommandInteraction, Interaction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
-import { openStdin } from "process";
+import { ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { BotClient } from "../core/client";
-import { log } from "./util";
+import { log } from "./util"
+import { emojis } from "../../config.json"
 
 interface cmdJSON {
   name: string;
@@ -82,11 +82,11 @@ export class ClientUtil {
   async createMenu(interaction: CommandInteraction, embeds: MessageEmbed[]) {
     const filter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
 
-    const nextButton = new MessageButton().setCustomId('next').setEmoji('898838010529976330').setStyle('PRIMARY');
-    const prevButton = new MessageButton().setCustomId('prev').setEmoji('898837930666258442').setStyle('PRIMARY');
-    const firstButton = new MessageButton().setCustomId('first').setEmoji('898838071901061190').setStyle('PRIMARY');
-    const lastButton = new MessageButton().setCustomId('last').setEmoji('898837229739331595').setStyle('PRIMARY');
-    const endButton = new MessageButton().setCustomId('end').setEmoji('898838342165209089').setStyle('DANGER');
+    const nextButton = new MessageButton().setCustomId('next').setEmoji(emojis.nextButton).setStyle('PRIMARY');
+    const prevButton = new MessageButton().setCustomId('prev').setEmoji(emojis.prevButton).setStyle('PRIMARY');
+    const firstButton = new MessageButton().setCustomId('first').setEmoji(emojis.firstButton).setStyle('PRIMARY');
+    const lastButton = new MessageButton().setCustomId('last').setEmoji(emojis.lastButton).setStyle('PRIMARY');
+    const endButton = new MessageButton().setCustomId('end').setEmoji(emojis.endButton).setStyle('DANGER');
 
     const row = new MessageActionRow()
     .addComponents([firstButton.setDisabled(false), prevButton.setDisabled(false), nextButton.setDisabled(false), lastButton.setDisabled(false), endButton]);
