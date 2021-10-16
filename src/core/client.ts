@@ -1,10 +1,12 @@
 import { Client, Intents, Collection } from "discord.js";
 import recursiveReadDir = require("recursive-readdir");
+import { ClientUtil } from "../helper/ClientUtil";
 import { Command } from "./command";
 
 export class BotClient extends Client {
     public commands: Collection<string, Command>;
     public options: any;
+    public util: ClientUtil;
 
     constructor() {
         super({
@@ -19,6 +21,7 @@ export class BotClient extends Client {
         });
 
         this.commands = new Collection();
+        this.util = new ClientUtil(this);
     }
 
     async start() {

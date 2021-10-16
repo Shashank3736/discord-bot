@@ -21,17 +21,13 @@ module.exports = class HelpCommand extends Command {
     if (command) {
       const commands = command.split(' ');
       if(commands.length === 2) {
-        const cmd = this.client.commands.get(commands[0])?.toJSON();
+        const cmd = this.client.commands.get(commands[0]);
         if(!cmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
 
-        const subcmd = cmd.options.find(sub => sub.name === commands[1]);
-        const description = createHelp(subcmd);
+        const subcmd = cmd.toJSON().options.find(sub => sub.name === commands[1]);
 
-        const embed = new MessageEmbed()
-        .setColor('AQUA')
-        .setTitle(`Help ${command}`)
-        .setDescription(description);
-
+        const embed = this.client.util.createHelpEmbed(subcmd, { permit_level: cmd.getPermitLevel(interaction.guild?.id), prefix: `/${commands[0]} `})[0]
+        .setTitle(command);
         interaction.reply({ embeds: [embed] });
       } else if(commands.length === 3) {
         const cmd = this.client.commands.get(commands[0])?.toJSON();
@@ -52,7 +48,7 @@ module.exports = class HelpCommand extends Command {
       } else {
         const cmd = this.client.commands.get(commands[0]);
         if (!cmd) interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
-        else cmd.help(interaction);
+        else cmd.newHelp(interaction);
       }
     } else {
       const embed = new MessageEmbed()

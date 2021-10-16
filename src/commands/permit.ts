@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, Options } from 'discord.js';
+import { CommandInteraction, MessageEmbed, Options } from 'discord.js';
 import { BotClient } from '../core/client';
 import { Command } from '../core/command';
 import { PermissionManager } from '../core/permission';
@@ -121,7 +121,47 @@ module.exports = class PermissionCommand extends Command {
     
     By default, owner is set to the absolute bot owner and regular is @everyone.
     
-    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\``
+    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\`
+    
+    **Sub Command(s)**
+    \`├─ set\` - Set permission level for a role, user or command.
+    \`├─ get\` - Get permission level for a role, user or command.
+    \`├─ reset\` - Reset permission level in your server and set things to default.
+    \`├─ enable\` - Enable a command in your server (which you disabled at sometime).
+    \`├─ disable\` - Disable a command in your server.
+    \`└─ remove\` - Remove a permission from a role, user or command.`
+  }
+
+  async newHelp(interaction: CommandInteraction) {
+    const returnError = () => interaction.reply({ content: `Some issues in \`permit.ts\` command file.`, ephemeral: true });
+    const permit_embed = this.client.util.createHelpEmbed(this.toJSON(), {
+      description: this._description,
+      permit_level: this.getPermitLevel(interaction.guild?.id)
+    })[0];
+
+    let setJSON = this.toJSON().options.find(opt => opt.name === 'set');
+    let getJSON = this.toJSON().options.find(opt => opt.name === 'get');
+    let resetJSON = this.toJSON().options.find(opt => opt.name === 'reset');
+    let enableJSON = this.toJSON().options.find(opt => opt.name === 'enable');
+    let disableJSON = this.toJSON().options.find(opt => opt.name === 'disable');
+    let removeJSON = this.toJSON().options.find(opt => opt.name === 'remove');
+    if(!setJSON || !getJSON || !resetJSON || !enableJSON || !disableJSON || !removeJSON) return returnError();
+
+    setJSON.description = `Set a permission level to a command, role or user.
+    
+    \`Note: If you set permission level for a disabled command then it will be enabled again with that permit level.\``
+
+    const set_embed = this.client.util.createHelpEmbed(setJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+    const get_embed = this.client.util.createHelpEmbed(getJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+    const reset_embed = this.client.util.createHelpEmbed(resetJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+    const enable_embed = this.client.util.createHelpEmbed(enableJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+    const disable_embed = this.client.util.createHelpEmbed(disableJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+    const remove_embed = this.client.util.createHelpEmbed(removeJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
+
+    const embeds: MessageEmbed[] = [permit_embed, set_embed, get_embed, reset_embed, enable_embed, disable_embed, remove_embed];
+
+    this.client.util.createMenu(interaction, embeds);
+    return;
   }
 
   // run when command= /permit set role

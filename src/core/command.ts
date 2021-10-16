@@ -40,6 +40,16 @@ export class Command {
         return permit.get(this.data.name, "COMMAND", this.permit_level);
     }
 
+    async newHelp(interaction: CommandInteraction) {
+        const embeds = this.client.util.createHelpEmbed(this.toJSON(), { 
+            permit_level: this.getPermitLevel(interaction.guild?.id),
+            description: this._description
+        });
+
+        if(embeds.length > 1) this.client.util.createMenu(interaction, embeds);
+        else interaction.reply({ embeds: embeds });
+    }
+
     async help(interaction: CommandInteraction) {
         const permit_level = this.getPermitLevel(interaction.guild ? interaction.guild.id : undefined);
 
@@ -61,11 +71,13 @@ export class Command {
             
             const nextButton = new MessageButton().setCustomId('next').setStyle('PRIMARY').setLabel('Next');
             const prevButton = new MessageButton().setCustomId('prev').setLabel('Previous').setStyle('SECONDARY');
+            const closeButton = new MessageButton().setCustomId('close').setLabel("X").setStyle('DANGER');
 
             const row = new MessageActionRow()
             .addComponents([
                 prevButton,
-                nextButton
+                nextButton,
+                closeButton
             ]);
 
             interaction.reply({ embeds: [helpEmbed], components: [row] });
@@ -75,9 +87,12 @@ export class Command {
             collector?.on('collect', async i => {
                 if(i.customId === 'next') {
                     i.update({ embeds: [helpEmbed.setDescription(description)] })
-                } else {
+                } else if(i.customId === 'prev') {
                     i.update({
                         embeds: [helpEmbed.setDescription(description_1)] });
+                } else {
+                    i.update({ components: [] });
+                    collector.stop('CLOSED_BY_X');
                 }
             });
 
