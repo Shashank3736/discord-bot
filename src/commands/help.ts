@@ -30,8 +30,9 @@ module.exports = class HelpCommand extends Command {
         .setTitle(command);
         interaction.reply({ embeds: [embed] });
       } else if(commands.length === 3) {
+        const cmdFile = this.client.commands.get(commands[0]);
         const cmd = this.client.commands.get(commands[0])?.toJSON();
-        if(!cmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
+        if(!cmd || !cmdFile) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
 
         const subcmdgrp = cmd.options.find(grp => grp.name === commands[1]);
         if(!subcmdgrp) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
@@ -39,10 +40,10 @@ module.exports = class HelpCommand extends Command {
         const subcmd = subcmdgrp.options.find(sub => sub.name === commands[2]);
         if(!subcmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
 
-        const embed = new MessageEmbed()
-        .setColor('NAVY')
-        .setTitle(`Help for /${command}`)
-        .setDescription(createHelp(subcmd));
+        const embed = this.client.util.createHelpEmbed(subcmd, {
+          permit_level: cmdFile.getPermitLevel(interaction.guild?.id),
+          prefix: `/${cmd.name} ${subcmdgrp.name} `
+        })[0];
 
         interaction.reply({ embeds: [embed] })
       } else {

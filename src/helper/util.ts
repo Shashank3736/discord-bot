@@ -1,3 +1,6 @@
+import { readdirSync, statSync } from "fs";
+import { join } from "path";
+
 const fetch = require('node-fetch');
 
 export async function clean (text: any): Promise<string> {
@@ -57,3 +60,24 @@ export function createHelp (cmdJSON: any) {
 
   return description;
 }
+
+export function readdirRecursive(directory: string) {
+  const result = [];
+
+  (function read(dir) {
+      const files = readdirSync(dir);
+
+      for (const file of files) {
+          const filepath = join(dir, file);
+
+          if (statSync(filepath).isDirectory()) {
+              read(filepath);
+          } else {
+              result.push(filepath);
+          }
+      }
+  }(directory));
+
+  return result;
+}
+

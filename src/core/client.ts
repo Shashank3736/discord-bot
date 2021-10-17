@@ -1,12 +1,15 @@
 import { Client, Intents, Collection } from "discord.js";
+import { join } from "path";
 import recursiveReadDir = require("recursive-readdir");
 import { ClientUtil } from "../helper/ClientUtil";
 import { Command } from "./command";
+import CommandHandler from "./CommandHandler";
 
 export class BotClient extends Client {
     public commands: Collection<string, Command>;
     public options: any;
     public util: ClientUtil;
+    public commandHandler: CommandHandler;
 
     constructor() {
         super({
@@ -22,9 +25,11 @@ export class BotClient extends Client {
 
         this.commands = new Collection();
         this.util = new ClientUtil(this);
+        this.commandHandler = new CommandHandler(this, join(__dirname, '../commands'));
     }
 
     async start() {
+        this.commandHandler.loadAll();
         await this.login(process.env.TOKEN);
     }
 }

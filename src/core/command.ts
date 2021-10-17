@@ -21,12 +21,12 @@ export class Command {
     constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, client: BotClient) {
         // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
         this.data = option;
-        this.permit_level = 1;
         this._channel = 1;
         this._bot_permission = ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS", "USE_APPLICATION_COMMANDS"];
         this._developer = false;
         this.client = client;
-        this.module = 'General'
+        this.module = 'General';
+        this.permit_level = this.client.util.config.commandPermission[this.data.name] || 1;
     }
 
     async _check_bypass(interaction: CommandInteraction) {

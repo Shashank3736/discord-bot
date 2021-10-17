@@ -5,5 +5,14 @@
     "lastButton": "⏩",
     "firstButton": "⏪",
     "endButton": "❌"
+  },
+  "message": {
+    "BLOCKED_USER": "You are blocked from using the command in this server or globally.",
+    "WRONG_INPUT": ""
+  },
+  "commandPermission": {
+    "permit": 5,
+    "help": 1,
+    "developer": 0
   }
 }

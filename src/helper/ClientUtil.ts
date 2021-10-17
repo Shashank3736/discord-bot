@@ -3,6 +3,7 @@ import { ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton,
 import { BotClient } from "../core/client";
 import { log } from "./util"
 import { emojis } from "../../config.json"
+import { PermissionManager } from "../core/permission";
 
 interface cmdJSON {
   name: string;
@@ -24,13 +25,36 @@ interface cmdOptions {
   prefix?: string;
 }
 
+interface config {
+  [index: string]: any;
+  emojis: {
+    nextButton: string;
+    prevButton: string;
+    lastButton: string;
+    firstButton: string;
+    endButton: string;
+  };
+  message: {
+    BLOCKED_USER: string;
+  };
+  commandPermission: {
+    permit: number;
+    help: number;
+    developer: number;
+  }
+}
+
 export class ClientUtil {
   public client: BotClient;
-  public config: object;
+  public config: config;
 
   constructor(client: BotClient) {
     this.client = client;
     this.config = require('../../config.json');
+  }
+
+  permit(guildId: string) {
+    return new PermissionManager(this.client, guildId);
   }
 
   replyError(content: string, interaction: CommandInteraction | ButtonInteraction) {
