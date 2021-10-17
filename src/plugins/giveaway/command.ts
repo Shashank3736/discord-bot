@@ -1,5 +1,5 @@
-import { Giveaway, GiveawayStartOptions } from "discord-giveaways";
-import { CommandInteraction } from "discord.js";
+import { Giveaway, GiveawayEditOptions, GiveawayStartOptions } from "discord-giveaways";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { table } from "quick.db";
 import { BotClient } from "../../core/client";
 import { Command } from "../../core/command";
@@ -16,6 +16,73 @@ export class GiveawayCommand extends Command {
         super(giveawaySlashCommand, client);
         this.permit_level = 3;
         this.giveawayManager = manager;
+    }
+
+    async cmd_edit(interaction: CommandInteraction) {
+        const id = interaction.options.getString('giveaway_id', true);
+        const duration = interaction.options.getString('duration', false);
+        const winners = interaction.options.getInteger('winners', false);
+        const prize = interaction.options.getString('prize', false);
+
+        const options: GiveawayEditOptions = {};
+        if(duration) options.addTime = ms(duration);
+        if(winners) options.newWinnerCount = winners;
+        if(prize) options.newPrize = prize;
+
+        this.giveawayManager.edit(id, options)
+        .then(giveaway => {
+            interaction.reply({ content: `[Giveaway](<${giveaway.messageURL}>) is updated in your server.` });
+        })
+        .catch((err) => interaction.reply({ content: `Some unknown error occurs. Contact developer and show the error there.\n\n${err}`}));
+    }
+
+    async cmd_delete(interaction:CommandInteraction) {
+        const id = interaction.options.getString('giveaway_id');
+        this.giveawayManager.deleteGiveaway(id)
+        .then(() => interaction.reply({ content: `Giveaway with id \`${id}\` successfully deleted from your server.`}))
+    }
+
+    async _have_problem(interaction: CommandInteraction) {
+        const id = interaction.options.getString('giveaway_id', false);
+        if(!interaction.guild) {
+            interaction.reply({ content: `Command can only be executed inside a server.`, ephemeral: true });
+            return true;
+        }
+        if(!id) return false;
+        const giveaway = this.giveawayManager.giveaways.find(opt => opt.messageId === id && opt.guildId === interaction.guildId);
+        if(!giveaway) {
+            interaction.reply({ content: `Not able to find this giveaway in this server.`, ephemeral: true });
+            return true;
+        }
+        return false;
+    }
+
+    async cmd_list(interaction: CommandInteraction) {
+        const emojis = (id:string) => isNaN(id) ? id :this.client.emojis.cache.get(id)?.toString() 
+                const giveaways = this.giveawayManager.giveaways.filter(opt => opt.guildId === interaction.guildId);
+        let description = `**Giveaway(s)** in server **${interaction.guild?.name}**\n`;
+
+        for (const giveaway of giveaways) {
+            description += `[${emojis(giveaway.ended ? this.client.util.config.emojis.stop : this.client.util.config.emojis.ongoing)}] [\`${giveaway.messageId}\`](<${giveaway.messageURL}>): **${giveaway.prize}**\n`;
+        }
+
+        const embed = new MessageEmbed()
+        .setColor('BLURPLE')
+        .setDescription(description);
+
+        return interaction.reply({ embeds: [embed] });
+    }
+
+    async cmd_reroll(interaction: CommandInteraction) {
+        const id = interaction.options.getString('giveaway_id', true);
+        this.giveawayManager.reroll(id)
+        .then((members) => {
+            const description = `New winners are: ${members.map(mem => mem.toString())}`;
+            interaction.reply({ephemeral: true, content: description });
+        })
+        .catch(() => {
+            interaction.reply({ephemeral: true, content: `No giveaway available at this message ID.`});
+        })
     }
 
     async cmd_start(interaction: CommandInteraction) {

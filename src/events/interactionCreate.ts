@@ -1,9 +1,7 @@
 import { ButtonInteraction, CommandInteraction, Interaction } from "discord.js";
 import { BotClient } from "../core/client";
 import { PermissionManager } from "../core/permission";
-import { clean } from "../helper/util";
 
-type MyCmdInt = CommandInteraction
 async function commandCreate(client: BotClient, interaction: CommandInteraction) {
     const command = client.commands.get(interaction.commandName);
 
@@ -18,6 +16,7 @@ async function commandCreate(client: BotClient, interaction: CommandInteraction)
     //check is bot or user allowed to run the command or not
     if(!(await command._check(interaction)) && !(await command._check_bypass(interaction))) return interaction.reply({ ephemeral: true, content: "You are not allowed to run this command."});
     if(!command.isAllowed(interaction)) return interaction.reply({ ephemeral: true, content: "Bot do not have sufficient permission to run this command. Contact server admins for solution."});
+    if((await command._have_problem(interaction))) return;
     //start perparing for command execution
     const subcmd = interaction.options.getSubcommand(false)
     const subCmdGrp = interaction.options.getSubcommandGroup(false);

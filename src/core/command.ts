@@ -28,6 +28,10 @@ export class Command {
         this.module = 'General';
         this.permit_level = client.util.config.commandPermission[this.data.name] || 1;
     }
+    
+    async _have_problem(interaction: CommandInteraction) {
+        return false;
+    }
 
     async _check_bypass(interaction: CommandInteraction) {
         return false;

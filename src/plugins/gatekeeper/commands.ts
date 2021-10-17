@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageAttachment, MessageEmbed, Options } from "discord.js";
+import { CommandInteraction, GuildChannel, MessageAttachment, MessageEmbed, Options } from "discord.js";
 import { Command } from "../../core/command";
 import { table } from "quick.db";
 import { createCaptchaSync } from "captcha-canvas";
@@ -40,6 +40,21 @@ export class SetupCommand extends Command {
         this._bot_permission.push("BAN_MEMBERS", "KICK_MEMBERS", "MANAGE_CHANNELS", "MANAGE_ROLES", "MANAGE_MESSAGES");
     }
 
+    async _have_problem(interaction: CommandInteraction) {
+        const subcmd = interaction.options.getSubcommand()
+        if(!interaction.guild) {
+            interaction.reply({ content: `Command can only be run inside a server.`, ephemeral: true });
+            return true
+        }
+        let guildConfig: guildConfig = db.get(interaction.guild.id);
+        if(!guildConfig && subcmd !== 'setup') {
+            interaction.reply({ content: `Type \`/gatekeeper setup\` command first to setup it in your server.`});
+            return true
+        }
+
+        return false;
+    }
+
     async cmd_config(interaction: CommandInteraction) {
         if(!interaction.guild) return;
         let guildConfig: guildConfig = db.get(interaction.guild.id);
@@ -60,6 +75,7 @@ export class SetupCommand extends Command {
         const captcha = createCaptchaSync(300, 100);
         const captchaFile = new MessageAttachment(captcha.image, captcha.text + '.png');
         const embed = new MessageEmbed()
+        .setColor('BLURPLE')
         .setTitle('Gatekeeper')
         .setDescription('Your server verification settings.')
         .addField('Status', guildConfig.status ? '`Enable`' : '`Disable`', true)
@@ -76,12 +92,12 @@ export class SetupCommand extends Command {
     async cmd_show(interaction: CommandInteraction) {
         if(!interaction.guild) return;
         let guildConfig: guildConfig = db.get(interaction.guild.id);
-        if(!guildConfig) return interaction.reply({ content: `Type \`/gateway setup\` command first to setup it in your server.`});
 
         const captcha = createCaptchaSync(300, 100);
         const captchaFile = new MessageAttachment(captcha.image, captcha.text + '.png');
         const embed = new MessageEmbed()
         .setTitle('Gatekeeper')
+        .setColor('BLURPLE')
         .setDescription('Your server verification settings.')
         .addField('Status', guildConfig.status ? '`Enable`' : '`Disable`', true)
         .addField('Action', actionData[guildConfig.action - 1], true)
@@ -96,18 +112,14 @@ export class SetupCommand extends Command {
 
     async cmd_setup(interaction: CommandInteraction) {
         if(!interaction.guild) return;
-        let guildConfig: guildConfig = db.get(interaction.guild.id);
-        if(!guildConfig) return interaction.reply({ content: `Type \`/gateway setup\` command first to setup it in your server.`});
-
+        
         const quarantineRole = await interaction.guild.roles.create({ name: 'Unverified' });
         for (const [_id, channel] of interaction.guild.channels.cache) {
-            channel.edit({
-                permissionOverwrites: [{
-                    id: quarantineRole.id,
-                    deny: ["READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
-                    type: 'role'
-                }]
-            });
+            if(channel.type === "GUILD_CATEGORY" || channel.type === "GUILD_TEXT" || channel.type === "GUILD_VOICE") {
+                channel.permissionOverwrites.create(quarantineRole, {
+                    "VIEW_CHANNEL": false
+                });
+            }
         }
 
         const unverifiedChannel = await interaction.guild.channels.create('verify-here', {
@@ -121,9 +133,15 @@ export class SetupCommand extends Command {
                 allow: ["VIEW_CHANNEL"]
             }]
         });
-
-        db.set(`${interaction.guild.id}.quarantine_role_id`, quarantineRole.id);
-        db.set(`${interaction.guild.id}.verification_channel_id`, unverifiedChannel.id);
+        const guildConfig: guildConfig = {
+            _id: interaction.guild.id,
+            action: 2,
+            duration: 30*60*1000,
+            status: true,
+            quarantine_role_id: quarantineRole.id,
+            verification_channel_id: unverifiedChannel.id
+        }
+        db.set(`${interaction.guild.id}`, guildConfig);
         interaction.reply({ content: `Setup of gatekeeper is completed in your server **${interaction.guild?.name}**.
         Bot successfully created
         - verify here channnel: ${unverifiedChannel.toString()}

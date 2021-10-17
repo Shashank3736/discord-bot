@@ -4,7 +4,10 @@
     "prevButton": "◀️",
     "lastButton": "⏩",
     "firstButton": "⏪",
-    "endButton": "❌"
+    "endButton": "❌",
+    "ongoing": "🟢",
+    "stop": "🔴",
+    "idle": "🟡"
   },
   "message": {
     "BLOCKED_USER": "You are blocked from using the command in this server or globally.",
@@ -17,3 +20,7 @@
     "ban": 3
   }
 }
+
+"ongoing": "744428838838075434",
+    "stop": "744428679672627270",
+    "idle": "744428575360286800"

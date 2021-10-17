@@ -4,6 +4,7 @@ import { BotClient } from "../core/client";
 import { log } from "./util"
 import { emojis } from "../../config.json"
 import { PermissionManager } from "../core/permission";
+import { config } from "../config";
 
 interface cmdJSON {
   name: string;
@@ -28,16 +29,22 @@ interface cmdOptions {
 interface config {
   [index: string]: any;
   emojis: {
+    [index: string]: string;
     nextButton: string;
     prevButton: string;
     lastButton: string;
     firstButton: string;
     endButton: string;
+    ongoing: string;
+    stop: string;
+    idle: string;
   };
   message: {
+    [index: string]: string;
     BLOCKED_USER: string;
   };
   commandPermission: {
+    [index: string]: number;
     permit: number;
     help: number;
     developer: number;
@@ -50,7 +57,7 @@ export class ClientUtil {
 
   constructor(client: BotClient) {
     this.client = client;
-    this.config = require('../../config.json');
+    this.config = config;
   }
 
   permit(guildId: string) {
