@@ -151,22 +151,28 @@ export class ClientUtil {
       const embed_2 = new MessageEmbed()
       .setColor('BLURPLE')
       .setTitle(cmd.name)
-      .setDescription(`${cmd.description}
-
-      ${options.description}`)
       .setFooter('Permission Level: ' + getPermitType(options.permit_level), this.client.user?.displayAvatarURL());
+
+      const subCmdAndGrp = cmd.options.filter(opt => opt.type < 3);
+      if(subCmdAndGrp.length > 0) {
+        options.description += `\n\**Subcommand(s)**\n`
+        for (const subCmdOrGrp of subCmdAndGrp) {
+          options.description += `\`└─ ${subCmdOrGrp.name}\` - ${subCmdOrGrp.description}\n`;
+        }
+      }
+      embed_2.setDescription(`${cmd.description}\n\n${options.description}`)
       embeds.push(embed_2)
     }
 
-    if(argsInCmd.length > 0) {
-      for (let i = 0; i < argsInCmd.length; i++) {
-        const element = argsInCmd[i];
-        embed.addField(`Argument ${i + 1}`, `Name: ${element.name}
-        Description: ${element.description}
-        Type: ${argType[element.type]}
-        Required: ${element.required ? 'Yes': 'No'}`)
-      }
-    }
+    // if(argsInCmd.length > 0) {
+    //   for (let i = 0; i < argsInCmd.length; i++) {
+    //     const element = argsInCmd[i];
+    //     embed.addField(`Argument ${i + 1}`, `Name: ${element.name}
+    //     Description: ${element.description}
+    //     Type: ${argType[element.type]}
+    //     Required: ${element.required ? 'Yes': 'No'}`)
+    //   }
+    // }
     if(subCommands.length > 0) {
       let desc = "";
 

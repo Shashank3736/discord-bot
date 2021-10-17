@@ -3,7 +3,7 @@ import { CommandInteraction, MessageEmbed, Options } from 'discord.js';
 import { BotClient } from '../core/client';
 import { Command } from '../core/command';
 import { PermissionManager, PermitLevel } from '../core/permission';
-import { clean, hastebin } from '../helper/util';
+import { clean, hastebin, log } from '../helper/util';
 
 const db = require('quick.db');
 
@@ -111,6 +111,7 @@ module.exports = class PermissionCommand extends Command {
   constructor(client: BotClient) {
     super(permsSlashCommand, client);
     this.permit_level = 5;
+    log(this.data.toJSON().options.find(opt => opt.name === 'list'));
     this._description = `You may set permissions based on individual command names, or permission levels.
     
     Acceptable permission levels are:
@@ -122,15 +123,7 @@ module.exports = class PermissionCommand extends Command {
     
     By default, owner is set to the absolute bot owner and regular is @everyone.
     
-    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\`
-    
-    **Sub Command(s)**
-    \`├─ set\` - Set permission level for a role, user or command.
-    \`├─ get\` - Get permission level for a role, user or command.
-    \`├─ reset\` - Reset permission level in your server and set things to default.
-    \`├─ enable\` - Enable a command in your server (which you disabled at sometime).
-    \`├─ disable\` - Disable a command in your server.
-    \`└─ remove\` - Remove a permission from a role, user or command.`
+    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\``
   }
 
   async cmd_list(interaction: CommandInteraction) {
@@ -153,7 +146,7 @@ module.exports = class PermissionCommand extends Command {
     return interaction.reply({ embeds: [embed] });
   }
 
-  async help(interaction: CommandInteraction) {
+  async _help(interaction: CommandInteraction) {
     const returnError = () => interaction.reply({ content: `Some issues in \`permit.ts\` command file.`, ephemeral: true });
     const permit_embed = this.client.util.createHelpEmbed(this.toJSON(), {
       description: this._description,
