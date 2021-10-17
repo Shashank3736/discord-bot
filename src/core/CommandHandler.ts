@@ -14,8 +14,9 @@ export default class CommandHandler extends EventEmitter {
   }
 
   load(filepath: string) {
+    if(filepath.endsWith('.temp.ts') || filepath.endsWith('.temp.js')) return;
     const command = require(filepath);
-    const cmd: Command = new command();
+    const cmd: Command = new command(this.client);
 
     return this.client.commands.set(cmd.data.name, cmd);
   }
@@ -24,10 +25,7 @@ export default class CommandHandler extends EventEmitter {
     const filePath = readdirRecursive(directory);
 
     for (const commandPath of filePath) {
-      const command = require(commandPath);
-      const cmd: Command = new command();
-
-      this.client.commands.set(cmd.data.name, cmd);
+      this.load(commandPath);
     }
   }
 }

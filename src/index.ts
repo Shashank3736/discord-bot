@@ -19,15 +19,15 @@ if(process.env.MONGODB_URI) {
 }
 
 require('./plugins/index')(client);
-readdir(join(__dirname, 'commands'), (_err, files) => {
-    files = files.filter(file => file.endsWith('.js') || file.endsWith('.ts'));
-    for (const file of files) {
-        log('./commands/'+file);
-        const commandFile = require('./commands/'+file);
-        const command = new commandFile(client);
-        client.commands.set(command.data.name, command);
-    }
-});
+// readdir(join(__dirname, 'commands'), (_err, files) => {
+//     files = files.filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+//     for (const file of files) {
+//         log('./commands/'+file);
+//         const commandFile = require('./commands/'+file);
+//         const command = new commandFile(client);
+//         client.commands.set(command.data.name, command);
+//     }
+// });
 
 readdir(join(__dirname, 'events'), (_err, files) => {
     files = files.filter((file) => statSync(join(__dirname, 'events', file)).isFile());

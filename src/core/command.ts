@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from "@discordjs/builders";
 
 import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, PermissionResolvable } from "discord.js";
-import { createHelp } from "../helper/util";
+import { createHelp, log } from "../helper/util";
 import { BotClient } from "./client";
 import { PermissionManager } from "./permission";
 
@@ -26,7 +26,7 @@ export class Command {
         this._developer = false;
         this.client = client;
         this.module = 'General';
-        this.permit_level = this.client.util.config.commandPermission[this.data.name] || 1;
+        this.permit_level = client.util.config.commandPermission[this.data.name] || 1;
     }
 
     async _check_bypass(interaction: CommandInteraction) {

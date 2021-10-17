@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, CommandInteractionOptionResolver, MessageEmbed } from 'discord.js';
-import { BotClient } from '../core/client';
-import { Command } from '../core/command';
-import { createHelp } from '../helper/util';
+import { BotClient } from '../../core/client';
+import { Command } from '../../core/command';
+import { createHelp } from '../../helper/util';
 
 const data = new SlashCommandBuilder()
   .setName('help')

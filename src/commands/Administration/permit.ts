@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed, Options } from 'discord.js';
-import { BotClient } from '../core/client';
-import { Command } from '../core/command';
-import { PermissionManager, PermitLevel } from '../core/permission';
-import { clean, hastebin, log } from '../helper/util';
+import { BotClient } from '../../core/client';
+import { Command } from '../../core/command';
+import { PermissionManager, PermitLevel } from '../../core/permission';
+import { clean, hastebin, log } from '../../helper/util';
 
 const db = require('quick.db');
 
@@ -112,6 +112,7 @@ module.exports = class PermissionCommand extends Command {
     super(permsSlashCommand, client);
     this.permit_level = 5;
     log(this.data.toJSON().options.find(opt => opt.name === 'list'));
+    this.module = 'Administration'
     this._description = `You may set permissions based on individual command names, or permission levels.
     
     Acceptable permission levels are:

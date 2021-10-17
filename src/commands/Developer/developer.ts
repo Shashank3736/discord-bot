@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Options } from "discord.js";
-import { BotClient } from "../core/client";
-import { Command } from "../core/command";
-import { PermissionManager } from "../core/permission";
-import { clean, hastebin } from "../helper/util";
+import { BotClient } from "../../core/client";
+import { Command } from "../../core/command";
+import { PermissionManager } from "../../core/permission";
+import { clean, hastebin } from "../../helper/util";
 const db = require('quick.db');
 
 const evalSlashCommand = new SlashCommandBuilder()
@@ -17,6 +17,7 @@ module.exports = class DeveloperCommand extends Command {
         super(evalSlashCommand, client);
         this._developer = true;
         this._bot_permission.push("ADMINISTRATOR");
+        this.module = 'Developer';
     }
 
     async cmd_eval(interaction: CommandInteraction) {

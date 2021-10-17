@@ -1,1 +1,1 @@
-console.log(typeof require('./config.json'));
+console.log( instanceof require('./dist/src/commands/permit'));

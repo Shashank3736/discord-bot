@@ -1,5 +1,9 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { Client } from "discord.js";
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
+import { BotClient } from "../core/client";
+import { Command } from "../core/command";
 
 const fetch = require('node-fetch');
 
@@ -80,4 +84,3 @@ export function readdirRecursive(directory: string) {
 
   return result;
 }
-

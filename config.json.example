@@ -13,6 +13,7 @@
   "commandPermission": {
     "permit": 5,
     "help": 1,
-    "developer": 0
+    "developer": 0,
+    "ban": 3
   }
 }
