@@ -17,7 +17,7 @@ module.exports = class BanCommand extends Command {
     this._bot_permission.push("BAN_MEMBERS");
   }
 
-  async exec(interaction: CommandInteraction) {
+  async _exec(interaction: CommandInteraction) {
     if(!interaction.guild) return this.client.util.replyError('Command can only be executed inside a guild.', interaction);
     const user = interaction.options.getUser('user', true);
     const DM = interaction.options.getBoolean('dm', false) || false;
