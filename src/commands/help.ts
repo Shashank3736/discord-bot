@@ -48,7 +48,7 @@ module.exports = class HelpCommand extends Command {
       } else {
         const cmd = this.client.commands.get(commands[0]);
         if (!cmd) interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
-        else cmd.newHelp(interaction);
+        else cmd.help(interaction);
       }
     } else {
       const embed = new MessageEmbed()

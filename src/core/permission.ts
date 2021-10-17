@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 // import { BotClient } from "./client";
 
 const db = require('quick.db');
-interface PermitLevel {
+export interface PermitLevel {
   id: string;
   type: 'USER' | 'ROLE' | 'COMMAND';
   permitLevel: 1 | 2 | 3 | 4 | 5 | -1;

@@ -30,7 +30,7 @@ export class Command {
     }
 
     async _check_bypass(interaction: CommandInteraction) {
-        return false
+        return false;
     }
 
     getPermitLevel(guildID?: string) {
@@ -40,7 +40,7 @@ export class Command {
         return permit.get(this.data.name, "COMMAND", this.permit_level);
     }
 
-    async newHelp(interaction: CommandInteraction) {
+    async help(interaction: CommandInteraction) {
         const embeds = this.client.util.createHelpEmbed(this.toJSON(), { 
             permit_level: this.getPermitLevel(interaction.guild?.id),
             description: this._description
@@ -50,7 +50,7 @@ export class Command {
         else interaction.reply({ embeds: embeds });
     }
 
-    async help(interaction: CommandInteraction) {
+    async _help(interaction: CommandInteraction) {
         const permit_level = this.getPermitLevel(interaction.guild ? interaction.guild.id : undefined);
 
         let description_1: string = `${this.data.description}

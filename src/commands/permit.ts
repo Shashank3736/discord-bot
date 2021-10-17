@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed, Options } from 'discord.js';
 import { BotClient } from '../core/client';
 import { Command } from '../core/command';
-import { PermissionManager } from '../core/permission';
+import { PermissionManager, PermitLevel } from '../core/permission';
 import { clean, hastebin } from '../helper/util';
 
 const db = require('quick.db');
@@ -10,6 +10,7 @@ const db = require('quick.db');
 const permsSlashCommand = new SlashCommandBuilder()
   .setName('permit')
   .setDescription('Customise the permissions for your server bot commands.')
+  .addSubcommand((cmd) => cmd.setName('list').setDescription('List all the permit level you set for this server.'))
   .addSubcommand((cmd) => cmd.setName('reset').setDescription('Reset permit level in your server to default.'))
   .addSubcommand((subcmd) => subcmd.setName('enable')
     .setDescription('Enable a command in your server.')
@@ -132,7 +133,27 @@ module.exports = class PermissionCommand extends Command {
     \`└─ remove\` - Remove a permission from a role, user or command.`
   }
 
-  async newHelp(interaction: CommandInteraction) {
+  async cmd_list(interaction: CommandInteraction) {
+    const getFieldString = (arr: PermitLevel[]) => arr.length > 0 ? arr.map(opt => `\`${opt.id} [${opt.permitLevel}]\``) : ['`None`'];
+    if(!interaction.guild) return this.client.util.replyError('Command can only be executed inside a server.', interaction);
+    const perms = new PermissionManager(this.client, interaction.guild?.id);
+    const embed = new MessageEmbed()
+    .setTitle('Permission Level for '+interaction.guild.name)
+    .setColor('BLURPLE')
+    .setDescription(`Permissions you set till date for command, role and user`);
+
+    const commands = perms.permission.filter(opt => opt.type === 'COMMAND');
+    const role = perms.permission.filter(opt => opt.type === 'ROLE');
+    const user = perms.permission.filter(opt => opt.type === 'USER');
+
+    embed.addField('Role', getFieldString(role).join(', '))
+    .addField('Command', getFieldString(commands).join(', '))
+    .addField('User', getFieldString(user).join(', '));
+
+    return interaction.reply({ embeds: [embed] });
+  }
+
+  async help(interaction: CommandInteraction) {
     const returnError = () => interaction.reply({ content: `Some issues in \`permit.ts\` command file.`, ephemeral: true });
     const permit_embed = this.client.util.createHelpEmbed(this.toJSON(), {
       description: this._description,

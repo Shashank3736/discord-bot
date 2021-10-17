@@ -26,9 +26,11 @@ interface cmdOptions {
 
 export class ClientUtil {
   public client: BotClient;
+  public config: object;
 
   constructor(client: BotClient) {
     this.client = client;
+    this.config = require('../../config.json');
   }
 
   replyError(content: string, interaction: CommandInteraction | ButtonInteraction) {
