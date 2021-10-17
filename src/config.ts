@@ -23,6 +23,7 @@ export const config = {
     "githubUserAvatar": "https://avatars2.githubusercontent.com/u/58896906?v=4?s=100"
   },
   link: {
-    supportServer: ""
+    supportServer: "https://discord.gg/Wsxmh8aGrT",
+    githubProfile: "https://github.com/Shashank3736"
   }
 }

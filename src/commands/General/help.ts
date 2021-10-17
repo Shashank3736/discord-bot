@@ -63,7 +63,7 @@ module.exports = class HelpCommand extends Command {
       }
       embed.setDescription(description);
 
-      interaction.reply({ ephemeral: hide, embeds: [embed] });
+      interaction.reply({ ephemeral: hide ? true : false, embeds: [embed] });
     }
   }
 

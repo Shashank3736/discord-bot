@@ -5,7 +5,8 @@ import { log } from "./util"
 import { emojis } from "../../config.json"
 import { PermissionManager } from "../core/permission";
 import { config } from "../config";
-
+import { version } from "../../package.json";
+ 
 interface cmdJSON {
   name: string;
   description: string;
@@ -26,38 +27,15 @@ interface cmdOptions {
   prefix?: string;
 }
 
-interface config {
-  [index: string]: any;
-  emojis: {
-    [index: string]: string;
-    nextButton: string;
-    prevButton: string;
-    lastButton: string;
-    firstButton: string;
-    endButton: string;
-    ongoing: string;
-    stop: string;
-    idle: string;
-  };
-  message: {
-    [index: string]: string;
-    BLOCKED_USER: string;
-  };
-  commandPermission: {
-    [index: string]: number;
-    permit: number;
-    help: number;
-    developer: number;
-  }
-}
-
 export class ClientUtil {
   public client: BotClient;
-  public config: config;
+  public config: typeof config;
+  public version: string;
 
   constructor(client: BotClient) {
     this.client = client;
     this.config = config;
+    this.version = version;
   }
 
   permit(guildId: string) {

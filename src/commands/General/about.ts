@@ -13,10 +13,19 @@ module.exports = class AboutCommand extends Command {
   }
 
   async exec(interaction: CommandInteraction) {
+    const owner = this.client.users.cache.get('479801755757183006') || await this.client.users.fetch("479801755757183006");
     const embed = new MessageEmbed()
-    .setTitle(`[Guardian Info]()`)
+    .setTitle(`Guardian Info`)
     .setColor("BLURPLE")
+    .setURL(this.client.util.config.link.supportServer)
+    .setAuthor('Shashank#3736', owner.displayAvatarURL(), this.client.util.config.link.githubProfile)
+    .setDescription(`A bot which is contains things that other multipurpose bot miss.`)
+    .addField('Developer', owner.tag, true)
+    .addField('Ping', `${this.client.ws.ping}ms`, true)
+    .addField('Version', `${this.client.util.version}`, true)
+    .setTimestamp()
+    .setThumbnail(this.client.util.config.images.githubUserAvatar);
+
+    interaction.reply({ embeds: [embed]});
   }
 }
-
-//https://avatars2.githubusercontent.com/u/58896906?v=4?s=100
