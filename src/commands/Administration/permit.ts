@@ -175,38 +175,6 @@ module.exports = class PermissionCommand extends Command {
     return interaction.reply({ embeds: [embed] });
   }
 
-  async _help(interaction: CommandInteraction) {
-    const returnError = () => interaction.reply({ content: `Some issues in \`permit.ts\` command file.`, ephemeral: true });
-    const permit_embed = this.client.util.createHelpEmbed(this.toJSON(), {
-      description: this._description,
-      permit_level: this.getPermitLevel(interaction.guild?.id)
-    })[0];
-
-    let setJSON = this.toJSON().options.find(opt => opt.name === 'set');
-    let getJSON = this.toJSON().options.find(opt => opt.name === 'get');
-    let resetJSON = this.toJSON().options.find(opt => opt.name === 'reset');
-    let enableJSON = this.toJSON().options.find(opt => opt.name === 'enable');
-    let disableJSON = this.toJSON().options.find(opt => opt.name === 'disable');
-    let removeJSON = this.toJSON().options.find(opt => opt.name === 'remove');
-    if(!setJSON || !getJSON || !resetJSON || !enableJSON || !disableJSON || !removeJSON) return returnError();
-
-    setJSON.description = `Set a permission level to a command, role or user.
-    
-    \`Note: If you set permission level for a disabled command then it will be enabled again with that permit level.\``
-
-    const set_embed = this.client.util.createHelpEmbed(setJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-    const get_embed = this.client.util.createHelpEmbed(getJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-    const reset_embed = this.client.util.createHelpEmbed(resetJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-    const enable_embed = this.client.util.createHelpEmbed(enableJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-    const disable_embed = this.client.util.createHelpEmbed(disableJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-    const remove_embed = this.client.util.createHelpEmbed(removeJSON, { permit_level: this.getPermitLevel(interaction.guild?.id), prefix: '/permit ' })[0];
-
-    const embeds: MessageEmbed[] = [permit_embed, set_embed, get_embed, reset_embed, enable_embed, disable_embed, remove_embed];
-
-    this.client.util.createMenu(interaction, embeds);
-    return;
-  }
-
   // run when command= /permit set role
   async set_role(interaction: CommandInteraction) {
     if (!interaction.guildId) return interaction.reply({ ephemeral: true, content: 'MISSING_GUILD_ID: This command can only be run inside a server.' });
