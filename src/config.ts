@@ -29,12 +29,17 @@ export const config = {
   },
   link: {
     supportServer: "https://discord.gg/Wsxmh8aGrT",
-    githubProfile: "https://github.com/Shashank3736"
+    githubProfile: "https://github.com/Shashank3736",
+    streamURL: db.get('bot.activity.url') || "https://www.youtube.com/watch?v=LN7e69hGRS8"
   },
   color: {
     main: db.get('color.main') || "BLURPLE",
     error: db.get('color.error') || "RED",
     wrong: db.get('color.wrong') || "GOLD",
     success: db.get('colot.success') || "GREEN"
+  },
+  presence: {
+    activity: db.get('bot.activity'),
+    status: db.get('bot.status') || 'online'
   }
 }

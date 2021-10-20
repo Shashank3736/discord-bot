@@ -13,4 +13,13 @@ export async function exec(client: BotClient) {
   };
   const data = JSON.stringify(dataJSON, undefined, '\t');
   writeFileSync('commands.json', data);
+  //set status
+  client.user?.setStatus(client.util.config.presence.status);
+  //set activity
+  const activity = client.util.config.presence.activity
+  if(activity) client.user?.setActivity({
+    name: activity.name,
+    type: activity.type,
+    url: activity.url || client.util.config.link.streamURL
+  });
 }

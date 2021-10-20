@@ -5,6 +5,7 @@ import { log } from "./util"
 import { PermissionManager } from "../core/permission";
 import { config } from "../config";
 import { version } from "../../package.json";
+import { table } from "quick.db";
  
 interface cmdJSON {
   name: string;
@@ -30,11 +31,13 @@ export class ClientUtil {
   public client: BotClient;
   public config: typeof config;
   public version: string;
+  public db: table
 
   constructor(client: BotClient) {
     this.client = client;
     this.config = config;
     this.version = version;
+    this.db = new table('bot_config');
   }
 
   embed(type: "success" | "main" | "wrong" | "error") {

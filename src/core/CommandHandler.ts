@@ -24,6 +24,8 @@ export default class CommandHandler extends EventEmitter {
     log(`Filepath: ${cmd._filepath}
     Module: ${cmd.module}
     Name: ${cmd.data.name}`);
+
+    console.log(`👉 Loaded command: ${cmd.data.name}`);
     return this.client.commands.set(cmd.data.name, cmd);
   }
 

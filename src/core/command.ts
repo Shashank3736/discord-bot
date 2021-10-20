@@ -34,6 +34,10 @@ export class Command {
         this._descriptions = {};
         this._filepath = __filename;
     }
+
+    async next(interaction: CommandInteraction) {
+        return true;
+    }
     
     async _have_problem(interaction: CommandInteraction) {
         return false;

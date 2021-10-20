@@ -15,7 +15,7 @@ if(process.env.MONGODB_URI) {
     });
 }
 
-require('./plugins/index')(client);
+require('../plugins/index')(client);
 
 client.on('guildCreate', guild => {
     const guild_perms = new PermissionManager(client, guild.id);

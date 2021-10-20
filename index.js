@@ -1,17 +1,5 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { basename } = require("path");
+const { Util } = require("discord.js");
+const { table } = require('quick.db')
 
-module.exports = class FirstClass {
-  constructor() {
-    this.filename = __filename;
-  }
-
-  getFileName() {
-    console.log(`1) ${__filename}
-    2) ${this.filename}
-    3) ${basename(__filename)}
-    4) ${module.filename}`)
-  }
-}
-
-const data = new SlashCommandBuilder
+const db = new table('bot_config');
+console.log(db.all())
