@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { BotClient } from '../../core/client';
 import { Command } from '../../core/command';
 
@@ -55,10 +55,9 @@ module.exports = class HelpCommand extends Command {
         else cmd.help(interaction);
       }
     } else {
-      const embed = new MessageEmbed()
+      const embed = this.client.util.embed('main')
         .setTitle('Help')
-        .setThumbnail(this.client.user?.displayAvatarURL())
-        .setColor('BLURPLE');
+        .setThumbnail(this.client.user?.displayAvatarURL() || this.client.util.config.images.githubUserAvatar);
 
       let description = '';
       for (const [_id, cmd] of this.client.commands) {

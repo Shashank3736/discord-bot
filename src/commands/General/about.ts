@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { BotClient } from "../../core/client";
 import { Command } from "../../core/command";
 
@@ -14,9 +14,8 @@ module.exports = class AboutCommand extends Command {
 
   async exec(interaction: CommandInteraction) {
     const owner = this.client.users.cache.get('479801755757183006') || await this.client.users.fetch("479801755757183006");
-    const embed = new MessageEmbed()
+    const embed = this.client.util.embed('main')
     .setTitle(`Guardian Info`)
-    .setColor("BLURPLE")
     .setURL(this.client.util.config.link.supportServer)
     .setAuthor('Shashank#3736', owner.displayAvatarURL(), this.client.util.config.link.githubProfile)
     .setDescription(`A bot which is contains things that other multipurpose bot miss.`)

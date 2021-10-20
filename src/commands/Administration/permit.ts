@@ -155,9 +155,8 @@ module.exports = class PermissionCommand extends Command {
     const getFieldString = (arr: PermitLevel[]) => arr.length > 0 ? arr.map(opt => `\`${opt.id} [${opt.permitLevel}]\``) : ['`None`'];
     if(!interaction.guild) return this.client.util.replyError('Command can only be executed inside a server.', interaction);
     const perms = new PermissionManager(this.client, interaction.guild?.id);
-    const embed = new MessageEmbed()
+    const embed = this.client.util.embed('main')
     .setTitle('Permission Level for '+interaction.guild.name)
-    .setColor('BLURPLE')
     .setDescription(`Permissions you set till date for command, role and user`);
 
     const commands = perms.permission.filter(opt => opt.type === 'COMMAND');

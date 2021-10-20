@@ -19,7 +19,7 @@ const data = new SlashCommandBuilder()
   //create set.name
   .addSubcommand(sub => sub.setName('name').setDescription('Set the name of bot.')
     .addStringOption(opt => opt.setName('name').setDescription('Write new name for your bot.').setRequired(true)))
-  //create
+  //create set.color
   .addSubcommand(sub => sub.setName('color').setDescription('Set custom embed color for your bot.')
     .addStringOption(opt => opt.setName('type').setDescription('Choose the type of embed color you want to change').setRequired(true)
       .addChoices([['Main (Which generally used.)', 'embed_main_color'], ['Wrong (When there is an error)', 'embed_error_color'], ['Log Color', 'embed_log_color']]))

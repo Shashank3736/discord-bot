@@ -1,8 +1,7 @@
 import { SlashCommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from "@discordjs/builders";
 
-import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, PermissionResolvable } from "discord.js";
-import { join } from "path";
-import { createHelp, log } from "../helper/util";
+import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, PermissionResolvable } from "discord.js";
+import { createHelp } from "../helper/util";
 import { BotClient } from "./client";
 import { PermissionManager } from "./permission";
 
@@ -70,10 +69,9 @@ export class Command {
         if(this._description) description_1 += this._description + '\n';
         const description = createHelp(this.toJSON());
         
-        const helpEmbed = new MessageEmbed()
+        const helpEmbed = this.client.util.embed('main')
         .setTitle(this.data.name)
-        .setThumbnail(this.client.user?.displayAvatarURL())
-        .setColor('BLURPLE');
+        .setThumbnail(this.client.user?.displayAvatarURL() || '');
 
         if(this._description) {
             helpEmbed.setDescription(description_1)

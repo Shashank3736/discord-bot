@@ -1,10 +1,8 @@
 require('dotenv').config();
 import { BotClient } from './core/client';
 import { PermissionManager } from './core/permission'
-import { clean, log } from './helper/util';
 import { connect, connection } from 'mongoose';
-import { readdir, statSync, writeFileSync } from 'fs';
-import { join } from 'path';
+
 //client
 const client = new BotClient();
 //mongoose

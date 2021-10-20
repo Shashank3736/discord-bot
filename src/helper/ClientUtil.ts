@@ -37,12 +37,18 @@ export class ClientUtil {
     this.version = version;
   }
 
+  embed(type: "success" | "main" | "wrong" | "error") {
+    return new MessageEmbed()
+    .setTimestamp()
+    .setColor(this.config.color[type]);
+  }
+
   permit(guildId: string) {
     return new PermissionManager(this.client, guildId);
   }
 
   replyError(content: string, interaction: CommandInteraction | ButtonInteraction) {
-    return interaction.reply({ ephemeral: true, content: content});
+    return interaction.reply({ ephemeral: true, embeds: [this.embed('error').setDescription(content)]});
   }
 
   commandFormat(cmd: cmdJSON2 | cmdJSON, prefix: string = '/'): string[] {
@@ -144,8 +150,7 @@ export class ClientUtil {
     const formats = this.commandFormat(cmd, options.prefix).map(e => `\`${e}\``);
     log(formats);
     if(formats.length === 0) formats.push("`"+options.prefix + cmd.name+'`');
-    const embed = new MessageEmbed()
-    .setColor('BLURPLE')
+    const embed = this.embed('main')
     .setTitle(`${options.prefix}${cmd.name}`)
     .setDescription(cmd.description)
     .addField('Format', formats.length === 1 ? formats[0] : formats.join('\n'))
@@ -156,8 +161,7 @@ export class ClientUtil {
     const argsInCmd = cmd.options.filter(arg => arg.type > 2);
 
     if(options.description) {
-      const embed_2 = new MessageEmbed()
-      .setColor('BLURPLE')
+      const embed_2 = this.embed('main')
       .setTitle(options.prefix+cmd.name)
       .setFooter('Permission Level: ' + getPermitType(options.permit_level), this.client.user?.displayAvatarURL())
       .addField('Format:', formats.join('\n'));
