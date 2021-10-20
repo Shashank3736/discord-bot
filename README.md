@@ -1,15 +1,6 @@
-# Features
-* Customise everything from discord with commands.
-* Powerful captcha nearly impossible to be read by bots.
-* Easy installation support heroku.
-* Use mongoDB to save data.
-* Auto update with a new releases.
-* Notify whenever we release a new code.
-* Provide support through bot dm
-
 # Under construction
 
-The bot is currently under development you can see all these features before end of August, 2020. Follow this repo to get updates in your emails. And star it if you want to increase the speed of development :slight_smile:
+The framework is still under construction and may take quite sometime before I complete it.
 
 # License
 This open source bot is licensed under [Apache License 2.0](https://github.com/Shashank3736/discord-captcha/blob/master/LICENSE). Uses of the code is grant explicitly here but you should give us the credit for the open source.

@@ -4,14 +4,14 @@ const db = new table('bot_config');
 
 export const config = {
   emojis: {
-    nextButton: db.get('emojis.nextButton') || "898838010529976330",
-    prevButton: db.get('emojis.prevButton') || "898837930666258442",
-    lastButton: db.get('emojis.lastButton') || "898837229739331595",
-    firstButton: db.get('emojis.firstButton') || "898838071901061190",
-    endButton: db.get('emojis.endButton') || "898838342165209089",
-    ongoing: db.get('emojis.ongoing') || "744428838838075434",
-    stop: db.get('emojis.stop') || "744428679672627270",
-    idle: db.get('emojis.idle') || "744428575360286800"
+    nextButton: db.get('emojis.nextButton') || "▶️",
+    prevButton: db.get('emojis.prevButton') || "◀️",
+    lastButton: db.get('emojis.lastButton') || "⏩",
+    firstButton: db.get('emojis.firstButton') || "⏪",
+    endButton: db.get('emojis.endButton') || "❌",
+    ongoing: db.get('emojis.ongoing') || "🟢",
+    stop: db.get('emojis.stop') || "🔴",
+    idle: db.get('emojis.idle') || "🟡"
   },
   message: {
     BLOCKED_USER: db.get('message.BLOCKED_USER') || "You are blocked from using the command in this server or globally.",
