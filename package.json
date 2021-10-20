@@ -5,7 +5,8 @@
   "main": "dist/src/index.js",
   "scripts": {
     "start": "node .",
-    "logger": "node src/base/logger"
+    "logger": "node src/base/logger",
+    "deploy": "node deploy.js"
   },
   "repository": {
     "type": "git",
