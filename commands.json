@@ -483,6 +483,33 @@
 							]
 						}
 					]
+				},
+				{
+					"type": 1,
+					"name": "reset",
+					"description": "Reset a particular type of config or complete setup to default.",
+					"options": [
+						{
+							"type": 3,
+							"name": "data_type",
+							"description": "Choose the type of data from above list.",
+							"required": true,
+							"choices": [
+								{
+									"name": "Emojis",
+									"value": "emojis"
+								},
+								{
+									"name": "Bot Data",
+									"value": "bot"
+								},
+								{
+									"name": "Embed Color",
+									"value": "color"
+								}
+							]
+						}
+					]
 				}
 			]
 		},

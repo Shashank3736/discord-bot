@@ -122,18 +122,33 @@ export class ClientUtil {
     const collector = interaction.channel.createMessageComponentCollector({ filter, componentType: 'BUTTON', time: 60000});
     let page = 0;
     collector.on('collect', i => {
-      log(i.customId);
-      if(i.customId === 'first') i.update({ embeds: [embeds[0]], components: [rowAtFirst] });
-      else if(i.customId === 'last') i.update({ embeds: [embeds[embeds.length - 1]], components: [rowAtLast]});
-      else if(i.customId === 'end') i.update({ components: [] });
-      else if(i.customId === 'next') {
-        page++;
-        if(page === embeds.length - 1) i.update({ embeds: [embeds[page]], components: [rowAtLast]});
-        else i.update({ embeds: [embeds[page]], components: [row] });
-      } else if(i.customId === 'prev') {
-        page--;
-        if(page === 0) i.update({ embeds: [embeds[page]], components: [rowAtFirst] });
-        else i.update({ embeds: [embeds[page]], components: [row] });
+      try {
+        log(i.customId + ' - Page no.' + page);
+        switch (i.customId) {
+          case 'first':
+            i.update({ embeds: [embeds[0]], components: [rowAtFirst] });
+            break;
+          case 'last':
+            i.update({ embeds: [embeds[embeds.length - 1]], components: [rowAtLast]});
+            break;
+          case 'end':
+            i.update({ components: [] });
+            break;
+          case 'next':
+            if(page < (embeds.length - 1)) page++;
+            if(page === embeds.length - 1) i.update({ embeds: [embeds[page]], components: [rowAtLast]});
+            else i.update({ embeds: [embeds[page]], components: [row] });
+            break;
+          case 'prev':
+            if(page > 0) page--;
+            if(page === 0) i.update({ embeds: [embeds[page]], components: [rowAtFirst] });
+            else i.update({ embeds: [embeds[page]], components: [row] });
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        i.update({ embeds: [], content: `An error occured here: ${error}.` });
       }
     });
 

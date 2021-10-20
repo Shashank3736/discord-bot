@@ -59,6 +59,25 @@ module.exports = class ConfigCommand extends Command {
     Config command is quite powerful and do not have any limitation as new things will clearly appear here time to time.`
   }
 
+  async set_emoji(interaction: CommandInteraction) {
+    const type = interaction.options.getString('type', true);
+    const content = interaction.options.getString('emoji', true);
+
+    let emoji = "";
+    const uniCodeEmojis = content.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g)
+    if(uniCodeEmojis) {
+      emoji = uniCodeEmojis[0];
+    } else {
+      emoji = content.split(':')[2].replace('>', '');
+    }
+
+    this.client.util.db.set(type, emoji);
+    const embed = this.client.util.embed('success')
+    .setDescription(`Emoji configuration completed. New emojis will be shown after bot restart.`);
+
+    return interaction.reply({ embeds: [embed] });
+  }
+
   async cmd_reset(interaction: CommandInteraction) {
     const type = interaction.options.getString('data_type', true);
 
