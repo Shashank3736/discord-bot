@@ -22,5 +22,15 @@ const data = new SlashCommandBuilder()
   //create set.color
   .addSubcommand(sub => sub.setName('color').setDescription('Set custom embed color for your bot.')
     .addStringOption(opt => opt.setName('type').setDescription('Choose the type of embed color you want to change').setRequired(true)
-      .addChoices([['Main (Which generally used.)', 'embed_main_color'], ['Wrong (When there is an error)', 'embed_error_color'], ['Log Color', 'embed_log_color']]))
-    .addStringOption(opt => opt.setName('colour').setRequired(true).setDescription('Write your colour code.'))))
+      .addChoices([['Main', 'color.main'], ['Wrong', 'color.wrong'], ['Error', 'color.error'], ['Success', 'color.success']]))
+    .addStringOption(opt => opt.setName('colour').setRequired(true).setDescription('Write your colour code.')))
+  .addSubcommand(sub => sub.setName('emoji').setDescription('Set reaction emojis for your bot.')
+    .addStringOption(opt => opt.setName('type').setRequired(true).setDescription('Choose the type of reaction you want to change')
+      .addChoices([
+        ['First Page Button', 'emojis.firstButton'], 
+        ['Previous Page Button', 'emojis.prevButton'], 
+        ['Next Page Button', 'emojis.nextButton'], 
+        ['Last Page Button', 'lastButton'], 
+        ['End Button', 'emojis.endButton']
+      ]))
+    .addStringOption(opt => opt.setName('emoji').setDescription('Write your emoji or emojiId below.').setRequired(true))))
