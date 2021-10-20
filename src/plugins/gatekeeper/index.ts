@@ -1,13 +1,12 @@
 import { createCaptchaSync } from "captcha-canvas";
 import { Message, MessageAttachment, MessageEmbed, Role } from "discord.js";
+import { join } from "path";
 import { table } from "quick.db";
 import { BotClient } from "../../core/client";
-import { guildConfig, SetupCommand } from "./commands";
 const db = new table('gatekeeper');
 
 module.exports = (client: BotClient) => {
-    const command = new SetupCommand(client);
-    client.commands.set(command.data.name, command);
+    client.commandHandler.load(join(__dirname, 'commands'));
 
     client.on('guildCreate', guild => {
         const config = {

@@ -159,8 +159,9 @@ export class ClientUtil {
     if(options.description) {
       const embed_2 = new MessageEmbed()
       .setColor('BLURPLE')
-      .setTitle(cmd.name)
-      .setFooter('Permission Level: ' + getPermitType(options.permit_level), this.client.user?.displayAvatarURL());
+      .setTitle(options.prefix+cmd.name)
+      .setFooter('Permission Level: ' + getPermitType(options.permit_level), this.client.user?.displayAvatarURL())
+      .addField('Format:', formats.join('\n'));
 
       const subCmdAndGrp = cmd.options.filter(opt => opt.type < 3);
       if(subCmdAndGrp.length > 0) {

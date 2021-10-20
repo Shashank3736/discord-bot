@@ -11,6 +11,7 @@ export const config = {
   },
   message: {
     BLOCKED_USER: "You are blocked from using the command in this server or globally.",
+    BOT_DESCRIPTION: `Guardian is a bot which made for the purpose to provide anything at its best quality.`,
     WRONG_INPUT: ""
   },
   commandPermission: {

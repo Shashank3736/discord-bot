@@ -111,8 +111,7 @@ module.exports = class PermissionCommand extends Command {
   constructor(client: BotClient) {
     super(permsSlashCommand, client);
     this.permit_level = 5;
-    log(this.data.toJSON().options.find(opt => opt.name === 'list'));
-    this.module = 'Administration'
+    this.module = 'Administration';
     this._description = `You may set permissions based on individual command names, or permission levels.
     
     Acceptable permission levels are:
@@ -122,11 +121,36 @@ module.exports = class PermissionCommand extends Command {
     - **Supporter** [2] (access to core Modmail supporting functions)
     - **Regular** [1] (most basic interactions such as help and about)
     
-    By default, owner is set to the absolute bot owner and regular is @everyone.
+    By default, owner is set to the absolute server owner and regular is @everyone.
     
-    To set permissions in your server type \`/permit set (role|user|command) [arg1] [arg2]\``
+    To set permissions in your server type \`/permit set <role|user|command> [arg1] [arg2]\`\n`;
+    this._descriptions = {
+      list: 'Run `/permit list` if you want to list all the pemission levels you set for this server.' +
+      ' It divides the content in 3 part commands, role and user.\n\n' + 
+      '> Note: It only shows list of permission which you set in this server. The dafault like owner have 5 and @everyone have 1 permit level is not shown here.',
+      set: `Set permission in your server for role, user or command.
+      
+      It's recommended to not set OWNER permission level to any random person but only trusted one. As the bot treates server ownwer and person with \`OWNER\` permssion level same way.
+      **Format:** /permit set [SUBCOMMAND: role | user | command ] [permit_level:PERMIT_TYPE] [target: role | user | command]
+      `,
+      get: `Get the permit level for a user, role or command.
+      
+      This command will show you the permission level of a role, user, or command.
+      All the roles and users are by default set to 1. To change them see \`/help permit set\`.
+      `,
+      remove: `Remove permit level from a user, role or command which you set earlier.
+      
+      This command will help you to make a role, user or command in its default value.
+      
+      > Note: If you want to set your complete server to default permission then run \`/permit reset\``
+    }
   }
-
+  /**
+   * Run `/permit list` if you want to list all the pemission levels you set for this server.
+   * It divides the content in 3 part commands, role and user.
+   * 
+   * > Note: It only shows list of permission which you set in this server. The dafault like owner have 5 and @everyone have 1 permit level is not shown here. 
+   */
   async cmd_list(interaction: CommandInteraction) {
     const getFieldString = (arr: PermitLevel[]) => arr.length > 0 ? arr.map(opt => `\`${opt.id} [${opt.permitLevel}]\``) : ['`None`'];
     if(!interaction.guild) return this.client.util.replyError('Command can only be executed inside a server.', interaction);

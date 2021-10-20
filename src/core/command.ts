@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from "@discordjs/builders";
 
 import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, PermissionResolvable } from "discord.js";
+import { join } from "path";
 import { createHelp, log } from "../helper/util";
 import { BotClient } from "./client";
 import { PermissionManager } from "./permission";
@@ -9,7 +10,7 @@ const perms = ["REGULAR", "SUPPORTER", "MODERATOR", "ADMINISTRATOR", "OWNER"];
 
 export class Command {
     [index: string]: any;
-    public data: SlashCommandSubcommandsOnlyBuilder | SlashCommandSubcommandGroupBuilder;
+    public data: SlashCommandSubcommandsOnlyBuilder | SlashCommandSubcommandGroupBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
     public permit_level: 1 | 2 | 3 | 4 | 5;
     public _description?: string;
     public _channel: 1 | 2 | 3; // 1 - Text Channel only 2 - DM channel only 3 - Both;
@@ -17,8 +18,12 @@ export class Command {
     public _developer: boolean;
     public client: BotClient;
     public module: string;
+    public _descriptions: {
+        [index: string]: string | undefined;
+    }
+    public _filepath: string;
 
-    constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, client: BotClient) {
+    constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">, client: BotClient) {
         // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
         this.data = option;
         this._channel = 1;
@@ -27,6 +32,8 @@ export class Command {
         this.client = client;
         this.module = 'General';
         this.permit_level = client.util.config.commandPermission[this.data.name] || 1;
+        this._descriptions = {};
+        this._filepath = __filename;
     }
     
     async _have_problem(interaction: CommandInteraction) {
@@ -104,7 +111,7 @@ export class Command {
     }
 
     isAllowed(interaction: CommandInteraction) {
-        const member = interaction.guild?.members.cache.get(interaction.client.user?.id);
+        const member = interaction.guild?.members.cache.get(this.client.user?.id);
         return member?.permissions.has(this._bot_permission);
     }
 
@@ -119,6 +126,9 @@ export class Command {
         interaction.reply({ content: "Command is still in progress. Please wait for some more time.", ephemeral: true });
     }
 
+    reload() {
+        return this.client.commandHandler.load(this._filepath);
+    }
     toJSON() {
         return this.data.toJSON();
     }

@@ -26,9 +26,6 @@ export class BotClient extends Client {
         this.commands = new Collection();
         this.util = new ClientUtil(this);
         this.commandHandler = new CommandHandler(this, join(__dirname, '../commands'));
-
-        
-
     }
 
     async start() {

@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/Shashank3736/guardian#readme",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
+    "@discordjs/builders": "^0.7.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@shreyash21/ms": "^2.0.1",
     "captcha-canvas": "^3.0.4",

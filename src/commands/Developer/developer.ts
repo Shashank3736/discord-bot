@@ -35,7 +35,7 @@ module.exports = class DeveloperCommand extends Command {
             const hastelink = await hastebin(cleantxt);
             console.log(hastelink);
             if (cleantxt.length > 800) interaction.reply({ content: hastelink, ephemeral: true });
-            else interaction.reply({ content: cleantxt, ephemeral: true });
+            else interaction.reply({ content: `Result:\n${cleantxt}`, ephemeral: true });
           } catch (error) {
             console.log(error);
             interaction.reply({ content: 'Some error occurs!', ephemeral: true });

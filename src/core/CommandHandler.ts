@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { readdirRecursive } from "../helper/util";
+import { log, readdirRecursive } from "../helper/util";
 import { BotClient } from "./client";
 import { Command } from "./command";
 
@@ -15,9 +15,15 @@ export default class CommandHandler extends EventEmitter {
 
   load(filepath: string) {
     if(filepath.endsWith('.temp.ts') || filepath.endsWith('.temp.js')) return;
+    const category = filepath.split('\\').reverse()[1]
     const command = require(filepath);
     const cmd: Command = new command(this.client);
 
+    cmd._filepath = filepath;
+    cmd.module = category;
+    log(`Filepath: ${cmd._filepath}
+    Module: ${cmd.module}
+    Name: ${cmd.data.name}`);
     return this.client.commands.set(cmd.data.name, cmd);
   }
 

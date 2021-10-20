@@ -9,13 +9,13 @@ const ms = require('@shreyash21/ms');
 
 const db = new table('giveaway');
 
-export class GiveawayCommand extends Command {
+module.exports = class GiveawayCommand extends Command {
     public giveawayManager: GiveawayHandler;
 
-    constructor(client: BotClient, manager: GiveawayHandler) {
+    constructor(client: BotClient) {
         super(giveawaySlashCommand, client);
         this.permit_level = 3;
-        this.giveawayManager = manager;
+        this.giveawayManager = client.options.giveawayManager;
     }
 
     async cmd_edit(interaction: CommandInteraction) {
@@ -58,7 +58,7 @@ export class GiveawayCommand extends Command {
     }
 
     async cmd_list(interaction: CommandInteraction) {
-        const emojis = (id:string) => isNaN(id) ? id :this.client.emojis.cache.get(id)?.toString() 
+        const emojis = (id:string) => parseInt(id) !== NaN ? id :this.client.emojis.cache.get(id)?.toString() 
                 const giveaways = this.giveawayManager.giveaways.filter(opt => opt.guildId === interaction.guildId);
         let description = `**Giveaway(s)** in server **${interaction.guild?.name}**\n`;
 

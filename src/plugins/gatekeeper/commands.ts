@@ -33,7 +33,7 @@ const setup_gatekeeper = new SlashCommandBuilder()
 .addSubcommand(subcmd => subcmd.setName('show').setDescription('Show current configuration of your server.'))
 .addSubcommand(subcmd => subcmd.setName('setup').setDescription('Setup gatekeeper in your server.'));
 
-export class SetupCommand extends Command {
+module.exports = class SetupCommand extends Command {
     constructor(client: BotClient) {
         super(setup_gatekeeper, client);
         this.permit_level = 4

@@ -1,14 +1,17 @@
-const { Util } = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { basename } = require("path");
 
-const validateEmbedColor = (embedColor) => {
-  try {
-      embedColor = Util.resolveColor(embedColor);
-      if (!isNaN(embedColor) && typeof embedColor === 'number') return true;
-      else return false;
-  } catch {
-      console.log('An error.')
-      return false;
+module.exports = class FirstClass {
+  constructor() {
+    this.filename = __filename;
   }
-};
 
-console.log(validateEmbedColor("#e91c1c"));
+  getFileName() {
+    console.log(`1) ${__filename}
+    2) ${this.filename}
+    3) ${basename(__filename)}
+    4) ${module.filename}`)
+  }
+}
+
+const data = new SlashCommandBuilder

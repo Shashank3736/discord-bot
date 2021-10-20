@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, CommandInteractionOptionResolver, MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { BotClient } from '../../core/client';
 import { Command } from '../../core/command';
-import { createHelp } from '../../helper/util';
 
 const data = new SlashCommandBuilder()
   .setName('help')
@@ -25,9 +24,13 @@ module.exports = class HelpCommand extends Command {
         if(!cmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
 
         const subcmd = cmd.toJSON().options.find(sub => sub.name === commands[1]);
+        if(!subcmd) return interaction.reply({ ephemeral: true, content: 'ERROR: COMMAND NOT AVAILABLE.' });
 
-        const embed = this.client.util.createHelpEmbed(subcmd, { permit_level: cmd.getPermitLevel(interaction.guild?.id), prefix: `/${commands[0]} `})[0]
-        .setTitle(command);
+        const embed = this.client.util.createHelpEmbed(subcmd, { 
+          permit_level: cmd.getPermitLevel(interaction.guild?.id), 
+          prefix: `/${commands[0]} `,
+          description: cmd._descriptions[subcmd.name]})[0];
+          
         interaction.reply({ embeds: [embed] });
       } else if(commands.length === 3) {
         const cmdFile = this.client.commands.get(commands[0]);
