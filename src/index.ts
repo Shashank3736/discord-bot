@@ -1,5 +1,4 @@
 require('dotenv').config();
-import { addGlobalCommands, addGuildCommands } from './helper/addSlashCommand';
 import { BotClient } from './core/client';
 import { PermissionManager } from './core/permission'
 import { clean, log } from './helper/util';
@@ -19,41 +18,6 @@ if(process.env.MONGODB_URI) {
 }
 
 require('./plugins/index')(client);
-// readdir(join(__dirname, 'commands'), (_err, files) => {
-//     files = files.filter(file => file.endsWith('.js') || file.endsWith('.ts'));
-//     for (const file of files) {
-//         log('./commands/'+file);
-//         const commandFile = require('./commands/'+file);
-//         const command = new commandFile(client);
-//         client.commands.set(command.data.name, command);
-//     }
-// });
-
-readdir(join(__dirname, 'events'), (_err, files) => {
-    files = files.filter((file) => statSync(join(__dirname, 'events', file)).isFile());
-
-    for (const file of files) {
-        log('./events/'+file);
-        const eventFile = require('./events/'+file);
-        log(`Event loaded: ${file.split('.')[0]}`);
-
-        client.on(file.split('.')[0], eventFile.bind(null, client))
-    }
-});
-//load commands
-client.once('ready', () => {
-    console.log("Client is ready!");
-    const commands = client.commands.filter(cmd => !cmd._developer).map(cmd => cmd.toJSON());
-    const developerCommand = client.commands.filter(cmd => cmd._developer).map(cmd => cmd.toJSON());
-    const dataJSON = {
-        commands: commands,
-        developerCommands: developerCommand
-    };
-    const data = JSON.stringify(dataJSON);
-    writeFileSync('commands.json', data);
-    // addGlobalCommands(commands);
-    // addGuildCommands(developerCommand);
-});
 
 client.on('guildCreate', guild => {
     const guild_perms = new PermissionManager(client, guild.id);

@@ -1,6 +1,6 @@
 import { ButtonInteraction, CommandInteraction, Interaction } from "discord.js";
-import { BotClient } from "../core/client";
-import { PermissionManager } from "../core/permission";
+import { BotClient } from "../../core/client";
+import { PermissionManager } from "../../core/permission";
 
 async function commandCreate(client: BotClient, interaction: CommandInteraction) {
     const command = client.commands.get(interaction.commandName);
@@ -33,10 +33,12 @@ async function buttonCreate(interaction: ButtonInteraction) {
     
 }
 
-module.exports = async (client: BotClient, interaction: Interaction) => {
+export async function exec(client: BotClient, interaction: Interaction) {
     if(interaction.isCommand()) commandCreate(client, interaction);
     else if(interaction.isButton()) {}
     else if(interaction.isContextMenu()) {}
     else if(interaction.isMessageComponent()) {}
     else if(interaction.isSelectMenu()) {}
 }
+
+export const name = 'interactionCreate';

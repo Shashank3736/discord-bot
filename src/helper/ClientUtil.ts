@@ -2,7 +2,6 @@ import { APIApplicationCommandOption, ApplicationCommandOptionType } from "disco
 import { ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { BotClient } from "../core/client";
 import { log } from "./util"
-import { emojis } from "../../config.json"
 import { PermissionManager } from "../core/permission";
 import { config } from "../config";
 import { version } from "../../package.json";
@@ -93,11 +92,11 @@ export class ClientUtil {
   async createMenu(interaction: CommandInteraction, embeds: MessageEmbed[]) {
     const filter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
 
-    const nextButton = new MessageButton().setCustomId('next').setEmoji(emojis.nextButton).setStyle('PRIMARY');
-    const prevButton = new MessageButton().setCustomId('prev').setEmoji(emojis.prevButton).setStyle('PRIMARY');
-    const firstButton = new MessageButton().setCustomId('first').setEmoji(emojis.firstButton).setStyle('PRIMARY');
-    const lastButton = new MessageButton().setCustomId('last').setEmoji(emojis.lastButton).setStyle('PRIMARY');
-    const endButton = new MessageButton().setCustomId('end').setEmoji(emojis.endButton).setStyle('DANGER');
+    const nextButton = new MessageButton().setCustomId('next').setEmoji(this.config.emojis.nextButton).setStyle('PRIMARY');
+    const prevButton = new MessageButton().setCustomId('prev').setEmoji(this.config.emojis.prevButton).setStyle('PRIMARY');
+    const firstButton = new MessageButton().setCustomId('first').setEmoji(this.config.emojis.firstButton).setStyle('PRIMARY');
+    const lastButton = new MessageButton().setCustomId('last').setEmoji(this.config.emojis.lastButton).setStyle('PRIMARY');
+    const endButton = new MessageButton().setCustomId('end').setEmoji(this.config.emojis.endButton).setStyle('DANGER');
 
     const row = new MessageActionRow()
     .addComponents([firstButton.setDisabled(false), prevButton.setDisabled(false), nextButton.setDisabled(false), lastButton.setDisabled(false), endButton]);

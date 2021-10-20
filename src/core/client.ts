@@ -1,7 +1,7 @@
 import { Client, Intents, Collection } from "discord.js";
 import { join } from "path";
-import recursiveReadDir = require("recursive-readdir");
 import { ClientUtil } from "../helper/ClientUtil";
+import { readdirRecursive } from "../helper/util";
 import { Command } from "./command";
 import CommandHandler from "./CommandHandler";
 
@@ -26,6 +26,14 @@ export class BotClient extends Client {
         this.commands = new Collection();
         this.util = new ClientUtil(this);
         this.commandHandler = new CommandHandler(this, join(__dirname, '../commands'));
+
+        const events = readdirRecursive(join(__dirname, '../events'));
+
+        for (const event of events) {
+            const eventFile = require(event);
+
+            this.on(eventFile.name, eventFile.exec.bind(null, this));
+        }
     }
 
     async start() {
