@@ -1,3 +1,5 @@
+> Warning: The template is made with purpose of heavy bots. If you want to make small bot using it may not be a good idea.
+
 # Welcome
 A discord.js library template to create discord bots a bit faster. This framework provide most of the common things to developer as a boost.
 
