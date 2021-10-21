@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { BotClient } from "../../core/client";
 import { Command } from "../../core/command";
+import { description, version } from "../../../package.json"
 
 const data = new SlashCommandBuilder()
 .setName('about')
@@ -18,10 +19,11 @@ module.exports = class AboutCommand extends Command {
     .setTitle(`Guardian Info`)
     .setURL(this.client.util.config.link.supportServer)
     .setAuthor('Shashank#3736', owner.displayAvatarURL(), this.client.util.config.link.githubProfile)
-    .setDescription(`A bot which is contains things that other multipurpose bot miss.`)
+    .setDescription(description)
     .addField('Developer', owner.tag, true)
     .addField('Ping', `${this.client.ws.ping}ms`, true)
-    .addField('Version', `${this.client.util.version}`, true)
+    .addField('Version', `${version}`, true)
+    .addField('Credits', 'This bot is coded by using [discord.js-template](https://github.com/Shashank3736/discord.js-template) made by [Shashank3736](https://github.com/Shashank3736) with love.')
     .setTimestamp()
     .setThumbnail(this.client.util.config.images.githubUserAvatar);
 

@@ -151,6 +151,16 @@ module.exports = class ConfigCommand extends Command {
     }
   }
 
+  async set_name(interaction: CommandInteraction) {
+    const name = interaction.options.getString('name', true);
+    
+    this.client.user?.setUsername(name);
+
+    const embed = this.client.util.embed('success').setDescription("Name of your bot has been changed to **"+name+"**.");
+
+    return interaction.reply({ embeds: [embed] });
+  }
+
   async next() {
     log("Config next function is executed. ", config)
     this.client.util.config = config;
