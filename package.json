@@ -1,7 +1,7 @@
 {
-  "name": "discord-captcha",
+  "name": "discord.js-template",
   "version": "1.0.0",
-  "description": "A highly customizable captcha bot for your discord server to protect your server from unwanted nuke and self botting.",
+  "description": "A discord.js-template which handle most of the things in background.",
   "main": "dist/src/index.js",
   "scripts": {
     "start": "node .",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShreyashKira/discord-captcha.git"
+    "url": "git+https://github.com/ShreyashKira/discord.js-template.git"
   },
   "keywords": [
     "captcha",
@@ -22,9 +22,9 @@
   "author": "Shreyash Raj",
   "license": "Apache License 2.0",
   "bugs": {
-    "url": "https://github.com/Shashank3736/guardian/issues"
+    "url": "https://github.com/Shashank3736/discord.js-template/issues"
   },
-  "homepage": "https://github.com/Shashank3736/guardian#readme",
+  "homepage": "https://github.com/Shashank3736/discord.js-template#readme",
   "dependencies": {
     "@discordjs/builders": "^0.7.0",
     "@discordjs/rest": "^0.1.0-canary.0",
