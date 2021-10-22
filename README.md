@@ -17,8 +17,8 @@ A discord.js library template to create discord bots a bit faster. This framewor
 
 ## How to use?
 - First you have to click on `Use this template` to create your repo.
-- Edit `.env.example` to `.env` and fill the blanks.
 - Now you can add commands in `src/command` folder.
+- It's recommended to see [plugins](plugins/README.md) if you want to create bots with extra features.
 
 > Note: All of your commands must be an extension of `Command` class for them to support the framework.
 > In your NewCommand class you can create `exec()` function if you do not have any subcommand/group. If you have subcommand (for e.g 'set') create `cmd_set` function. If you have group name 'config' and subcmd inside it is 'set' then create `config_set` function in your class.
