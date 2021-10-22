@@ -1,5 +1,7 @@
-import { Client, Intents, Collection } from "discord.js";
+import { Client, Collection } from "discord.js";
+import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { ClientOption } from "../config";
 import { ClientUtil } from "../helper/ClientUtil";
 import { readdirRecursive } from "../helper/util";
 import { Command } from "./command";
@@ -12,16 +14,7 @@ export class BotClient extends Client {
     public commandHandler: CommandHandler;
 
     constructor() {
-        super({
-            intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MEMBERS, 
-                Intents.FLAGS.DIRECT_MESSAGES, 
-                Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-                Intents.FLAGS.GUILD_MESSAGES
-            ]
-        });
+        super(ClientOption);
 
         this.commands = new Collection();
         this.util = new ClientUtil(this);
@@ -32,12 +25,26 @@ export class BotClient extends Client {
         for (const event of events) {
             const eventFile = require(event);
 
+            console.log(`👉 Loading events: ${eventFile.name}`);
+
             this.on(eventFile.name, eventFile.exec.bind(null, this));
         }
+    }
+
+    isOwner(id: string) {
+        const ownerID: string[] = this.util.db.get('developers') || [];
+        return (this.application?.owner?.id === id) || (ownerID.includes(id));
     }
 
     async start() {
         this.commandHandler.loadAll();
         await this.login(process.env.TOKEN);
+        if(!this.application?.owner) this.application?.fetch();
+
+        if(!process.env.CLIENT_ID) {
+            const data = readFileSync('.env', 'utf8') + `\nCLIENT_ID=${this.user?.id}`;
+
+            writeFileSync('.env', data);
+        }
     }
 }

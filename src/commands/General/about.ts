@@ -3,6 +3,7 @@ import { CommandInteraction } from "discord.js";
 import { BotClient } from "../../core/client";
 import { Command } from "../../core/command";
 import { description, version } from "../../../package.json"
+const ms = require('ms')
 
 const data = new SlashCommandBuilder()
 .setName('about')
@@ -23,6 +24,7 @@ module.exports = class AboutCommand extends Command {
     .addField('Developer', owner.tag, true)
     .addField('Ping', `${this.client.ws.ping}ms`, true)
     .addField('Version', `${version}`, true)
+    .addField('Uptime', ms(this.client.uptime), true)
     .addField('Credits', 'This bot is coded by using [discord.js-template](https://github.com/Shashank3736/discord.js-template) made by [Shashank3736](https://github.com/Shashank3736) with love.')
     .setTimestamp()
     .setThumbnail(this.client.util.config.images.githubUserAvatar);

@@ -1,6 +1,16 @@
+import { ClientOptions, Intents } from "discord.js";
 import { table } from "quick.db";
 
 const db = new table('bot_config');
+
+export const ClientOption: ClientOptions = {
+  intents: [
+      Intents.FLAGS.GUILDS,
+      Intents.FLAGS.GUILD_MEMBERS, 
+      Intents.FLAGS.DIRECT_MESSAGES
+  ],
+  partials: ["CHANNEL"]
+};
 
 export const config = {
   emojis: {

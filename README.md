@@ -12,6 +12,9 @@ A discord.js library template to create discord bots a bit faster. This framewor
 - Support for plugins to create new commands/feature on the way.
 - ClientUtil to provide support for creation of embed, helpEmbed, menu etc.
 
+## Pre-requirements
+- Node: ^v17
+
 ## How to use?
 - First you have to click on `Use this template` to create your repo.
 - Edit `.env.example` to `.env` and fill the blanks.

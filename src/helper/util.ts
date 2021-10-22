@@ -1,11 +1,23 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { Client } from "discord.js";
-import { readdirSync, statSync } from "fs";
+import { readdirSync, statSync, writeFileSync } from "fs";
 import { join } from "path";
-import { BotClient } from "../core/client";
-import { Command } from "../core/command";
+import { createInterface } from "readline";
 
 const fetch = require('node-fetch');
+
+export function fillEnv() {
+  let data = '';
+
+  const rl = createInterface({
+      input: process.stdin,
+      output: process.stdout
+  });
+
+  rl.question('TOKEN > ', ans => data+= `TOKEN=${ans}\n`);
+  rl.question('Main server ID > ', ans => data += `MAIN_SERVER_ID=${ans}\n`);
+  rl.question('MongoDB URI > ', ans => data += `MONGODB_URI=${ans}\n`);
+
+  writeFileSync('.env', data);
+}
 
 export async function clean (text: any): Promise<string> {
     if (text && text.constructor.name === 'Promise') text = await text
@@ -33,7 +45,7 @@ export function hastebin (input: any, extension?: string): Promise<string> {
 }
 
 export function log(message: any) {
-  if(process.env.DEBUG) console.log(message);
+  if(process.env.DEBUG === '1') console.log(message);
 };
 
 export function createHelp (cmdJSON: any) {

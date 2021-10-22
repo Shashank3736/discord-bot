@@ -118,7 +118,7 @@ export class Command {
     }
 
     async _check(interaction: CommandInteraction) {
-        if(this._developer) return (process.env.OWNER_ID === interaction.user.id);
+        if(this._developer) return (this.client.isOwner(interaction.user.id));
         if(!interaction.guildId) return true;
         const guild_perms = new PermissionManager(interaction.client, interaction.guildId);
         return (await guild_perms.getMemberLevel(interaction.user.id)) >= this.getPermitLevel(interaction.guildId);
