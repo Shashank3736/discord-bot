@@ -16,23 +16,37 @@ export class Command {
     public _bot_permission: PermissionResolvable[];
     public _developer: boolean;
     public client: BotClient;
-    public module: string;
+    public module?: string;
     public _descriptions: {
         [index: string]: string | undefined;
     }
     public _filepath: string;
 
-    constructor(option: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">, client: BotClient) {
+    constructor(data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">, 
+        client: BotClient,
+        options: { 
+            channel?: 1 | 2 | 3; 
+            bot_permissions?: PermissionResolvable[]
+            developer?:boolean;
+            module?:string;
+            level?: 1 | 2 | 3 | 4 | 5;
+            description?: string;
+            descriptions?: {
+                [index:string]:string;
+            }
+        }) {
         // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
-        this.data = option;
-        this._channel = 1;
-        this._bot_permission = ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS", "USE_APPLICATION_COMMANDS"];
-        this._developer = false;
+        this.data = data;
+        this._channel = options.channel || 1;
+        const initialPerms: PermissionResolvable[] = ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS", "USE_APPLICATION_COMMANDS"];
+        this._bot_permission = [...initialPerms, ...(options.bot_permissions ? options.bot_permissions : [])];
+        this._developer = options.developer || false;
         this.client = client;
-        this.module = 'General';
-        this.permit_level = client.util.config.commandPermission[this.data.name] || 1;
-        this._descriptions = {};
+        this.module = options.module;
+        this.permit_level = options.level || client.util.config.commandPermission[this.data.name] || 1;
+        this._descriptions = options.descriptions || {};
         this._filepath = __filename;
+        this._description = options.description;
     }
 
     async next(interaction: CommandInteraction) {

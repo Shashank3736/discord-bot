@@ -20,10 +20,8 @@ export default class CommandHandler extends EventEmitter {
     const cmd: Command = new command(this.client);
 
     cmd._filepath = filepath;
-    cmd.module = category;
-    log(`Filepath: ${cmd._filepath}
-    Module: ${cmd.module}
-    Name: ${cmd.data.name}`);
+    if(!cmd.module) cmd.module = category;
+    log(`${cmd.module.toUpperCase()}/${cmd.data.name}:${cmd._filepath}`);
 
     console.log(`👉 Loaded command: ${cmd.data.name}`);
     return this.client.commands.set(cmd.data.name, cmd);
