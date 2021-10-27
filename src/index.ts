@@ -2,10 +2,6 @@ require('dotenv').config();
 import { BotClient } from './core/client';
 import { PermissionManager } from './core/permission'
 import { connect, connection } from 'mongoose';
-import { fillEnv } from './helper/util';
-//check if .env exist or not
-if(!process.env.TOKEN) fillEnv();
-
 //client
 const client = new BotClient();
 //mongoose

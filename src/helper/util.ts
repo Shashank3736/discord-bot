@@ -1,22 +1,23 @@
-import { readdirSync, statSync, writeFileSync } from "fs";
+import { readdirSync, statSync } from "fs";
 import { join } from "path";
 import { createInterface } from "readline";
 
 const fetch = require('node-fetch');
 
-export function fillEnv() {
-  let data = '';
-
+export async function input(param:string='') {
   const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout
+    input: process.stdin,
+    output: process.stdout
   });
 
-  rl.question('TOKEN > ', ans => data+= `TOKEN=${ans}\n`);
-  rl.question('Main server ID > ', ans => data += `MAIN_SERVER_ID=${ans}\n`);
-  rl.question('MongoDB URI > ', ans => data += `MONGODB_URI=${ans}\n`);
+  const data = await new Promise((resolve, _reject) => {
+    rl.question(param, (ans) => {
+      resolve(ans);
+    });
+  });
 
-  writeFileSync('.env', data);
+  rl.close();
+  return data;
 }
 
 export async function clean (text: any): Promise<string> {

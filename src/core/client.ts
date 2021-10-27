@@ -32,7 +32,7 @@ export class BotClient extends Client {
     }
 
     isOwner(id: string) {
-        const ownerID: string[] = this.util.db.get('developers') || [];
+        const ownerID: string[] = process.env.OWNER_ID ? process.env.OWNER_ID.split(' ') : [];
         return (this.application?.owner?.id === id) || (ownerID.includes(id));
     }
 

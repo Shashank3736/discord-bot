@@ -34,7 +34,7 @@ export class Command {
             descriptions?: {
                 [index:string]:string;
             }
-        }) {
+        }={}) {
         // option.addSubcommand(cmd => cmd.setName('help').setDescription('Get help message for the command.'));
         this.data = data;
         this._channel = options.channel || 1;

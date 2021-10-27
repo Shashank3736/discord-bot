@@ -21,8 +21,24 @@ export async function exec(client: BotClient, message: Message) {
         collector.stop('INCORRECT_FORMAT');
       }
       else {
-        envVariables.forEach(variable => data += '\n' + variable);
-        writeFileSync('.env', data);
+        const dataSet: { [index:string]:string } = {};
+        let newData = ''
+        const oldData = data.match(/([A-Z_])+=[^\s\n]+/g)
+        if(oldData) { 
+          for(const variable of oldData) {
+            dataSet[variable.split('=')[0]] = variable.split('=')[1];
+          }
+        }
+
+        for(const variable of envVariables) {
+          dataSet[variable.split('=')[0]] = variable.split('=')[1];
+        }
+
+        for(const config in dataSet) {
+          newData += `${config}=${dataSet[config]}\n`;
+        }
+
+        writeFileSync('.env', newData);
         m.reply({ content: `Done!` });
         collector.stop('COMPLETE');
       };
@@ -36,5 +52,18 @@ export async function exec(client: BotClient, message: Message) {
         stdin: ${stdin}`});
       };
     });
+  } else if(message.content === '.restart') {
+    const embed = client.util.embed('main').setTitle('Want to restart bot?')
+    .setDescription("Please keep in mind restarting the bot is not a good choice. Refrain from doing it again.");
+
+    const result = await client.util.areYouSure(message, 'Are you sure? you want to restart the bot.');
+
+    console.log(result);
+
+    if(result) {
+      console.log('Restart bot.')
+      client.destroy();
+      require('../../main');
+    }
   }
 }

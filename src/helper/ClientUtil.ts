@@ -1,5 +1,5 @@
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
-import { ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import { ButtonInteraction, CommandInteraction, Message, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { BotClient } from "../core/client";
 import { log } from "./util"
 import { PermissionManager } from "../core/permission";
@@ -98,8 +98,42 @@ export class ClientUtil {
     return finalReturn;
   };
 
-  async createMenu(interaction: CommandInteraction, embeds: MessageEmbed[]) {
-    const filter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
+  areYouSure(message: Message, confirmation: string) {
+    return new Promise(async(resolve, reject) => {
+      const embed = this.embed('main').setDescription(confirmation).setTitle('Are you sure?')
+      const yesButton = new MessageButton().setCustomId('yes').setLabel('Yes').setStyle('SUCCESS');
+      const noButton = new MessageButton().setCustomId('no').setLabel('No').setStyle('DANGER');
+      const row = new MessageActionRow().addComponents(yesButton, noButton);
+
+      const msg = await message.reply({ embeds: [embed], components: [row] });
+      const filter = (i: MessageComponentInteraction) => {
+        if(message.user) return i.user.id === message.user.id;
+        else return i.user.id === message.author.id
+      };
+
+      const collector = msg.createMessageComponentCollector({ filter, componentType: 'BUTTON' });
+
+      collector.on('collect', async i => {
+        if(i.customId === 'yes') {
+          await i.update({ components: [], embeds: [], content: 'The task will be completed!' });
+          collector.stop('YES');
+        } else {
+          await i.update({ content: 'The task will not be completed!', embeds: [], components: [] });
+          collector.stop('NO');
+        }
+      });
+
+      collector.on('end', (collected, reason) => {
+        reason === 'YES' ? resolve(true) : resolve(false);
+      });
+    });
+  }
+
+  async createMenu(interaction: CommandInteraction | Message, embeds: MessageEmbed[]) {
+    const filter = (i: MessageComponentInteraction) => {
+      if(interaction.user) return i.user.id === interaction.user.id;
+      else return i.user.id === interaction.author.id
+    };
 
     const nextButton = new MessageButton().setCustomId('next').setEmoji(this.config.emojis.nextButton).setStyle('PRIMARY');
     const prevButton = new MessageButton().setCustomId('prev').setEmoji(this.config.emojis.prevButton).setStyle('PRIMARY');
